@@ -1,0 +1,12 @@
+
+# Generated
+*.o
+*.elf
+
+# Eclipse
+.project
+.cproject
+.pydevproject
+.metadata
+.settings
+
