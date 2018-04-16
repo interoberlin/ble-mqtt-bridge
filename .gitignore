@@ -1,0 +1,18 @@
+
+# Generated
+*.o
+*.a
+*.out
+*.elf
+*.bin
+*.hex
+*.so
+*.so.0*
+
+# Eclipse
+.project
+.cproject
+.settings
+.metadata
+
+
