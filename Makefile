@@ -1,16 +1,20 @@
 
-MAIN = hellotinyb
+MAIN = main
 
 CC = gcc
 CPP = g++
 
 CPPFLAGS += -Wall
-CPPFLAGS += -std=c++11
-CPPFLAGS += -fdiagnostics-color
+CPPFLAGS += -std=gnu++17
+CPPFLAGS += -fdiagnostics-color=auto
+CPPFLAGS += -Iinclude/
 LDFLAGS += -L../tinyb/build/src
 LDFLAGS += -ltinyb
+#LDFLAGS += -lthread
+LDFLAGS += -lpthread
 
-SRCS = $(wildcard *.cpp)
+#SRCS = $(wildcard src/*.cpp)
+SRCS = src/main.cpp
 OBJS = $(SRCS:.cpp=.o)
 ELF = $(MAIN).elf
 
