@@ -24,7 +24,6 @@ int main()
 
     printf("Starting device discovery");
     fflush(stdout);
-
     manager->start_discovery();
 
     BluetoothDevice* device = NULL;
@@ -46,7 +45,7 @@ int main()
         }
 
         // Wait for 1 seconds
-        std::this_thread::sleep_for(1s);
+        this_thread::sleep_for(1s);
         printf(".");
         fflush(stdout);
     }
@@ -73,7 +72,7 @@ int main()
         }
 
         // Wait for 1 second
-        std::this_thread::sleep_for(1s);
+        this_thread::sleep_for(1s);
         printf(".");
         fflush(stdout);
     }
@@ -85,7 +84,7 @@ int main()
     }
 
     printf("Device is connected.\n");
-    printf("Discovering services");
+    printf("Discovering services...\n");
     fflush(stdout);
 
     BluetoothGattService* service = NULL;
@@ -107,18 +106,46 @@ int main()
 
         for (auto it = services.begin(); it != services.end(); ++it)
         {
-            printf("Service %s\n", (*it)->get_uuid());
-
             if ((*it)->get_uuid() == UUID_SERVICE_ALARMLIGHT)
             {
                 service = (*it).release();
                 break;
             }
         }
-        printf("\nDevice doesn't seem to offer the desired service.\n");
+        printf("Service with UUID %s not found.\n", UUID_SERVICE_ALARMLIGHT);
         exit(3);
     }
-    printf("\n");
 
     printf("Alarmlight service found.\n");
+
+    BluetoothGattCharacteristic* characteristic = NULL;
+    auto characteristics = service->get_characteristics();
+    for (auto it = characteristics.begin(); it != characteristics.end(); ++it)
+    {
+        if ((*it)->get_uuid() == UUID_CHARACTERISTIC_ALARMLIGHT)
+        {
+            characteristic = (*it).release();
+            break;
+        }
+    }
+    if (characteristic == NULL)
+    {
+        printf("Characteristic with UUID %s not found.\n", UUID_CHARACTERISTIC_ALARMLIGHT);
+        exit(4);
+    }
+
+    printf ("Alarmlight characteristic found.\n");
+
+    vector<uint8_t> value;
+    while (true)
+    {
+        value = {1};
+        characteristic->write_value(value);
+        printf("Value written.\n");
+        this_thread::sleep_for(1s);
+        value = {0};
+        characteristic->write_value(value);
+        printf("Value written.\n");
+        this_thread::sleep_for(1s);
+    }
 }
