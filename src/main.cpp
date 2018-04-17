@@ -1,11 +1,12 @@
 
 #include <iostream>
 #include <stddef.h>
-#include <tinyb.hpp>
 #include <chrono>
 #include <thread>
 #include <pthread.h>
 #include <time.h>
+#include <tinyb.hpp>
+#include <MQTTClient.hpp>
 
 
 using namespace std;
@@ -19,6 +20,19 @@ using namespace tinyb;
 
 int main()
 {
+    MQTTClient* mqtt_client = new MQTTClient(
+                                    "alarmlight-daemon",
+                                    "alarmlight",
+                                    "localhost",
+                                    8883
+                                    );
+
+    this_thread::sleep_for(2s);
+
+    bool ble_connected = false;
+    mqtt_client->publish(NULL, "alarmlight/connected", 1, &ble_connected, 0, true);
+
+
     BluetoothManager *manager;
     manager = BluetoothManager::get_bluetooth_manager();
 
@@ -136,6 +150,11 @@ int main()
 
     printf ("Alarmlight characteristic found.\n");
 
+    ble_connected = true;
+    mqtt_client->publish(NULL, "alarmlight/connected", 1, &ble_connected, 0, true);
+
+    mqtt_client->subscribe(NULL, "alarmlight/switch", 0);
+
     vector<uint8_t> value;
     while (true)
     {
@@ -143,6 +162,7 @@ int main()
         characteristic->write_value(value);
         printf("Value written.\n");
         this_thread::sleep_for(1s);
+
         value = {0};
         characteristic->write_value(value);
         printf("Value written.\n");

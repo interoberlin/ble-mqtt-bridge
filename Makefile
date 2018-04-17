@@ -10,11 +10,11 @@ CPPFLAGS += -fdiagnostics-color=auto
 CPPFLAGS += -Iinclude/
 LDFLAGS += -L../tinyb/build/src
 LDFLAGS += -ltinyb
-#LDFLAGS += -lthread
 LDFLAGS += -lpthread
+LDFLAGS += -lmosquittopp
 
 #SRCS = $(wildcard src/*.cpp)
-SRCS = src/main.cpp
+SRCS = src/main.cpp src/MQTTClient.cpp
 OBJS = $(SRCS:.cpp=.o)
 ELF = $(MAIN).elf
 
