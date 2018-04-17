@@ -14,7 +14,7 @@ LDFLAGS += -lpthread
 LDFLAGS += -lmosquittopp
 
 #SRCS = $(wildcard src/*.cpp)
-SRCS = src/main.cpp src/MQTTClient.cpp
+SRCS = src/main.cpp src/MQTTClient.cpp src/BLEClient.cpp
 OBJS = $(SRCS:.cpp=.o)
 ELF = $(MAIN).elf
 

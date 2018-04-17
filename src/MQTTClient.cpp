@@ -1,5 +1,6 @@
 
 #include <MQTTClient.hpp>
+#include <BLEClient.hpp>
 #include <iostream>
 #include <string.h>
 
@@ -63,6 +64,9 @@ void MQTTClient::on_connect(int rc)
     {
         std::cout << ">> Connected to MQTT broker" << std::endl;
         connected = true;
+        bool ble_connected = false;
+        publish(NULL, "alarmlight/connected", 1, &ble_connected, 0, true);
+        subscribe(NULL, "alarmlight/switch", 0);
     }
     else
     {
@@ -83,3 +87,15 @@ void MQTTClient::on_publish(int mid)
 {
     std::cout << ">> MQTT message published (" << mid << ")" << std::endl;
 }
+
+
+void MQTTClient::on_message(const struct mosquitto_message* message)
+{
+    if (ble_client == NULL)
+        return;
+
+    vector<uint8_t> v;
+
+    ble_client->write(v);
+}
+
