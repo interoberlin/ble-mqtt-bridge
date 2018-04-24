@@ -12,31 +12,71 @@
 using namespace std;
 using namespace std::chrono_literals;
 
-#define ALARMLIGHT_BEACON_ADDRESS       "87:10:DC:E9:6D:50"
-#define UUID_SERVICE_ALARMLIGHT         "00004000-0000-1000-8000-00805f9b34fb"
-#define UUID_CHARACTERISTIC_ALARMLIGHT  "00004001-0000-1000-8000-00805f9b34fb"
+/*
+ * TODO:
+ * For now, the beacon configuration is hard-coded.
+ * Later on, this can be out-sourced, e.g. to a configuration file.
+ */
+#define ALARMLIGHT_BEACON_ADDRESS           "87:10:DC:E9:6D:50"
+#define ALARMLIGHT_UUID_SERVICE             "00004000-0000-1000-8000-00805f9b34fb"
+#define ALARMLIGHT_UUID_CHARACTERISTIC      "00004001-0000-1000-8000-00805f9b34fb"
+
+#define FLOORSENSOR_BEACON_ADDRESS          "4D:FA:10:CC:26:0D"
+#define FLOORSENSOR_UUID_SERVICE            "00002011-0000-1000-8000-00805f9b34fb"
+#define FLOORSENSOR_UUID_CHARACTERISTIC1    "00002012-0000-1000-8000-00805f9b34fb"
+#define FLOORSENSOR_UUID_CHARACTERISTIC2    "00002013-0000-1000-8000-00805f9b34fb"
+#define FLOORSENSOR_UUID_CHARACTERISTIC3    "00002014-0000-1000-8000-00805f9b34fb"
+
+
+MQTTClient* mqtt_client = NULL;
+BLEClient* ble_client = NULL;
+
+
+void bridge_alarmlight()
+{
+    mqtt_client = new MQTTClient(
+                            "alarmlight-daemon",
+                            "alarmlight",
+                            "localhost",
+                            8883
+                            );
+
+    ble_client = new BLEClient(
+                            BLEClientRole::WRITER,
+                            ALARMLIGHT_BEACON_ADDRESS,
+                            ALARMLIGHT_UUID_SERVICE,
+                            ALARMLIGHT_UUID_CHARACTERISTIC
+                            );
+}
+
+
+void bridge_floorsensor()
+{
+    mqtt_client = new MQTTClient(
+                            "floorsensor-daemon",
+                            "floorsensor",
+                            "localhost",
+                            8883
+                            );
+
+    ble_client = new BLEClient(
+                            BLEClientRole::READER,
+                            FLOORSENSOR_BEACON_ADDRESS,
+                            FLOORSENSOR_UUID_SERVICE,
+                            FLOORSENSOR_UUID_CHARACTERISTIC1
+                            );
+
+    ble_client->registerReadEventReceiver(mqtt_client);
+}
 
 
 int main()
 {
-    MQTTClient* mqtt_client = new MQTTClient(
-                                    "alarmlight-daemon",
-                                    "alarmlight",
-                                    "localhost",
-                                    8883
-                                    );
-
-    BLEClient* ble_client = new BLEClient(
-                                    ALARMLIGHT_BEACON_ADDRESS,
-                                    UUID_SERVICE_ALARMLIGHT,
-                                    UUID_CHARACTERISTIC_ALARMLIGHT
-                                    );
-
-    mqtt_client->ble_client = ble_client;
-    ble_client->mqtt_client = mqtt_client;
-
-    ble_client->process();
-
+//    bridge_floorsensor();
+    bridge_alarmlight();
 
     this_thread::sleep_for(5s);
+
+    delete ble_client;
+    delete mqtt_client;
 }
