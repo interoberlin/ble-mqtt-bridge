@@ -85,18 +85,19 @@ public:
 
     void startConnectionThread();
     void stopConnectionThread();
-    bool getConnectionThreadTerminationRequested();
+    bool getConnectionThreadTerminationRequested() { return terminate_connection_thread; }
 
     void write(vector<uint8_t>&);
 
     void startReaderThread();
     void stopReaderThread();
-    bool getReaderThreadTerminationRequested();
+    bool getReaderThreadTerminationRequested() { return terminate_reader_thread; }
 
-    void setReadInterval(chrono::seconds seconds);
-    chrono::seconds getReadInterval();
+    void setReadInterval(chrono::seconds seconds) { read_interval = seconds; }
+    chrono::seconds getReadInterval() { return read_interval; }
 
-    void registerReadEventReceiver(MQTTClient*);
+    void registerReadEventReceiver(MQTTClient* m) { mqtt_client = m; }
+    MQTTClient* getReadEventReceiver() { return mqtt_client; };
 };
 
 

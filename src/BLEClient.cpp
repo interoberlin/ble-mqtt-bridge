@@ -173,12 +173,6 @@ void BLEClient::stopConnectionThread()
 }
 
 
-bool BLEClient::getConnectionThreadTerminationRequested()
-{
-    return terminate_connection_thread;
-}
-
-
 void BLEClient::write(vector<uint8_t>& value)
 {
     if (characteristic == NULL)
@@ -251,25 +245,4 @@ void BLEClient::stopReaderThread()
 }
 
 
-bool BLEClient::getReaderThreadTerminationRequested()
-{
-    return terminate_reader_thread;
-}
 
-
-void BLEClient::setReadInterval(chrono::seconds seconds)
-{
-    read_interval = seconds;
-}
-
-
-chrono::seconds BLEClient::getReadInterval()
-{
-    return read_interval;
-}
-
-
-void BLEClient::registerReadEventReceiver(MQTTClient* m)
-{
-    mqtt_client = m;
-}
