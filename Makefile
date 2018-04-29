@@ -22,7 +22,7 @@ ELF = $(MAIN).elf
 all: $(ELF)
 
 $(ELF): $(OBJS)
-	$(CPP) $(CPPFLAGS) $(LDFLAGS) $^ -o $@
+	$(CPP) $^ $(CPPFLAGS) $(LDFLAGS) -o $@
 
 %.o: %.cpp
 	$(CPP) $(CPPFLAGS) -c $^ -o $@
