@@ -1,6 +1,7 @@
 
 #include <iostream>
 #include <stddef.h>
+#include <unistd.h>
 #include <chrono>
 #include <thread>
 #include <pthread.h>
@@ -66,9 +67,14 @@ int main()
 {
     bridge_floorsensor();
 
-    while (true);
+//    while (true);
 //    this_thread::sleep_for(5s);
 
-//    delete ble_client;
-//    delete mqtt_client;
+    // Sleep until a signal arrives
+    pause();
+
+    delete ble_client[0];
+    delete mqtt_client[0];
+    delete ble_client[1];
+    delete mqtt_client[1];
 }
