@@ -5,10 +5,10 @@ CC = gcc
 CPP = g++
 
 CPPFLAGS += -Wall
+CPPFLAGS += -g
 CPPFLAGS += -std=gnu++17
 CPPFLAGS += -fdiagnostics-color=auto
 CPPFLAGS += -Iinclude/
-LDFLAGS += -L../tinyb/build/src
 LDFLAGS += -ltinyb
 LDFLAGS += -lpthread
 LDFLAGS += -lmosquittopp
@@ -20,6 +20,9 @@ ELF = $(MAIN).elf
 
 
 all: $(ELF)
+
+run: $(ELF)
+	./$<
 
 $(ELF): $(OBJS)
 	$(CPP) $^ $(CPPFLAGS) $(LDFLAGS) -o $@
