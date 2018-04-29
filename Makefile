@@ -1,5 +1,5 @@
 
-MAIN = main
+MAIN = floorsensord
 
 CC = gcc
 CPP = g++
@@ -14,7 +14,7 @@ LDFLAGS += -lpthread
 LDFLAGS += -lmosquittopp
 
 #SRCS = $(wildcard src/*.cpp)
-SRCS = src/main.cpp src/MQTTClient.cpp src/BLEClient.cpp
+SRCS = src/floorsensord.cpp src/MQTTClient.cpp src/BLEClient.cpp
 OBJS = $(SRCS:.cpp=.o)
 ELF = $(MAIN).elf
 

@@ -64,9 +64,6 @@ void MQTTClient::on_connect(int rc)
     {
         cout << ">> Connected to MQTT broker" << endl;
         connected = true;
-        bool ble_connected = false;
-        publish(NULL, "alarmlight/connected", 1, &ble_connected, 0, true);
-        subscribe(NULL, "alarmlight/switch", 0);
     }
     else
     {
