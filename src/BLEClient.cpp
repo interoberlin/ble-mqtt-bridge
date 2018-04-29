@@ -220,15 +220,15 @@ static void* bleclient_reader_thread(void* argv)
 
             vector<uint8_t> data = ble_client->characteristic->read_value(0);
 
-//            cout << data << endl;
-
             MQTTClient* mqtt_client = ble_client->getReadEventReceiver();
             if (mqtt_client != NULL)
             {
                 uint8_t length = data.size();
                 char s[length];
-//                s =
-//                data.
+                for (uint8_t i=0; i<length; i++)
+                {
+                    s[i] = data[i];
+                }
                 mqtt_client->send_message(s, length);
             }
         }
