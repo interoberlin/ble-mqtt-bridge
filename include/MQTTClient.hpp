@@ -6,8 +6,10 @@
 #ifndef MQTTCLIENT_HPP
 #define MQTTCLIENT_HPP
 
-
+#include <stdint.h>
 #include <mosquittopp.h>
+
+using namespace std;
 
 class BLEClient;
 
@@ -33,7 +35,7 @@ class MQTTClient: public mosqpp::mosquittopp
     MQTTClient(const char* id, const char* topic, const char* host, int port);
     ~MQTTClient();
 
-    bool send_message(const char* message);
+    bool send_message(char* s, uint8_t length);
 };
 
 

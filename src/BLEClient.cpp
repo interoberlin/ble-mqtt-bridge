@@ -8,7 +8,8 @@ BLEClient::BLEClient(
             BLEClientRole::role_enum role,
             string address,
             string service,
-            string characteristic)
+            string characteristic
+            )
 {
     this->role = role;
     device_address = address;
@@ -17,17 +18,24 @@ BLEClient::BLEClient(
 
     manager = BluetoothManager::get_bluetooth_manager();
 
-    terminate_reader_thread = false;
-    reader_thread_running = false;
-    reader_thread_id = 0;
-    read_interval = 1s;
-
-    mqtt_client = NULL;
-
     terminate_connection_thread = false;
     connection_thread_id = 0;
     connection_thread_running = false;
     startConnectionThread();
+
+    terminate_reader_thread = false;
+    reader_thread_running = false;
+    reader_thread_id = 0;
+    read_interval = 1s;
+    mqtt_client = NULL;
+
+    // Only in the reader role there is need for a reader thread
+    if (role == BLEClientRole::READER)
+    {
+        // Delay this thread against connections thread intervals
+        this_thread::sleep_for(500ms);
+        startReaderThread();
+    }
 }
 
 
@@ -43,6 +51,8 @@ static void* bleclient_connection_thread(void* argv)
     // Get this thread's owner object
     BLEClient* ble_client = (BLEClient*) argv;
 
+    bool was_previously_connected = false;
+
     // Run until termination signal received
     while (!ble_client->getConnectionThreadTerminationRequested())
     {
@@ -53,8 +63,7 @@ static void* bleclient_connection_thread(void* argv)
 
             if (!ble_client->manager->get_discovering())
             {
-                cout << ">> Starting to scan for BLE devices..." << endl;
-                fflush(stdout);
+                cout << ">> Starting to scan for BLE devices..." << endl << flush;
                 ble_client->manager->start_discovery();
             }
             else
@@ -65,8 +74,7 @@ static void* bleclient_connection_thread(void* argv)
                 {
                     if ((*it)->get_address() == ble_client->device_address)
                     {
-                        cout << ">> Found requested beacon in list of known devices" << endl;
-                        fflush(stdout);
+                        cout << ">> Found requested beacon in list of known devices" << endl << flush;
                         ble_client->device = (*it).release();
                         break;
                     }
@@ -78,8 +86,8 @@ static void* bleclient_connection_thread(void* argv)
         {
             if (!ble_client->device->get_connected())
             {
-                cout << ">> Connecting..." << endl;
-                fflush(stdout);
+                was_previously_connected = false;
+                cout << ">> Connecting..." << endl << flush;
 
                 ble_client->manager->stop_discovery();
                 ble_client->device->disconnect();
@@ -87,8 +95,15 @@ static void* bleclient_connection_thread(void* argv)
             }
             else
             {
-                cout << ">> Connected." << endl;
-                fflush(stdout);
+                if (was_previously_connected)
+                {
+                    cout << ">> Still connected to beacon." << endl << flush;
+                }
+                else
+                {
+                    cout << ">> Connected to beacon with address " << ble_client->device_address << endl << flush;
+                    was_previously_connected = true;
+                }
 
                 if (ble_client->service == NULL)
                 {
@@ -138,6 +153,8 @@ static void* bleclient_connection_thread(void* argv)
         this_thread::sleep_for(1s);
     }
 
+    cout << ">> BLE connection thread terminated." << endl << flush;
+
     // Thread terminates
     return NULL;
 }
@@ -177,7 +194,7 @@ void BLEClient::write(vector<uint8_t>& value)
 {
     if (characteristic == NULL)
     {
-        cout << ">> BLE: Unable to write: Characteristic not resolved." << endl;
+        cerr << ">> BLE: Unable to write: Characteristic not resolved." << endl;
         return;
     }
 
@@ -197,8 +214,29 @@ static void* bleclient_reader_thread(void* argv)
     // Run until termination signal received
     while (!ble_client->getReaderThreadTerminationRequested())
     {
+        if (ble_client->characteristic != NULL)
+        {
+            cout << ">> Reading data from BLE beacon..." << endl << flush;
+
+            vector<uint8_t> data = ble_client->characteristic->read_value(0);
+
+//            cout << data << endl;
+
+            MQTTClient* mqtt_client = ble_client->getReadEventReceiver();
+            if (mqtt_client != NULL)
+            {
+                uint8_t length = data.size();
+                char s[length];
+//                s =
+//                data.
+                mqtt_client->send_message(s, length);
+            }
+        }
+
         this_thread::sleep_for(ble_client->getReadInterval());
     }
+
+    cout << ">> BLE reader thread terminated." << endl << flush;
 
     // Thread terminates
     return NULL;
@@ -228,7 +266,6 @@ void BLEClient::startReaderThread()
     }
 
     reader_thread_running = true;
-    printf("Successfully started reader thread with ID %d.\n", (int) reader_thread_id);
 }
 
 
@@ -243,6 +280,4 @@ void BLEClient::stopReaderThread()
     // Wait for thread to actually terminate
     pthread_join(reader_thread_id, NULL);
 }
-
-
 

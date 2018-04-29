@@ -21,7 +21,10 @@ using namespace std::chrono_literals;
 #define ALARMLIGHT_UUID_SERVICE             "00004000-0000-1000-8000-00805f9b34fb"
 #define ALARMLIGHT_UUID_CHARACTERISTIC      "00004001-0000-1000-8000-00805f9b34fb"
 
-#define FLOORSENSOR_BEACON_ADDRESS          "4D:FA:10:CC:26:0D"
+// Dem Dingens vom Flo
+//#define FLOORSENSOR_BEACON_ADDRESS          "4D:FA:10:CC:26:0D"
+// Dem Dingens vom Götz
+#define FLOORSENSOR_BEACON_ADDRESS          "F6:56:9D:78:F0:2E"
 #define FLOORSENSOR_UUID_SERVICE            "00002011-0000-1000-8000-00805f9b34fb"
 #define FLOORSENSOR_UUID_CHARACTERISTIC1    "00002012-0000-1000-8000-00805f9b34fb"
 #define FLOORSENSOR_UUID_CHARACTERISTIC2    "00002013-0000-1000-8000-00805f9b34fb"
@@ -36,9 +39,9 @@ void bridge_alarmlight()
 {
     mqtt_client = new MQTTClient(
                             "alarmlight-daemon",
-                            "alarmlight",
+                            "alarmlight/switch",
                             "localhost",
-                            8883
+                            1883
                             );
 
     ble_client = new BLEClient(
@@ -54,16 +57,16 @@ void bridge_floorsensor()
 {
     mqtt_client = new MQTTClient(
                             "floorsensor-daemon",
-                            "floorsensor",
+                            "floorsensor/z0",
                             "localhost",
-                            8883
+                            1883
                             );
 
     ble_client = new BLEClient(
                             BLEClientRole::READER,
                             FLOORSENSOR_BEACON_ADDRESS,
                             FLOORSENSOR_UUID_SERVICE,
-                            FLOORSENSOR_UUID_CHARACTERISTIC1
+                            FLOORSENSOR_UUID_CHARACTERISTIC3
                             );
 
     ble_client->registerReadEventReceiver(mqtt_client);
@@ -72,10 +75,11 @@ void bridge_floorsensor()
 
 int main()
 {
-//    bridge_floorsensor();
-    bridge_alarmlight();
+    bridge_floorsensor();
+//    bridge_alarmlight();
 
-    this_thread::sleep_for(5s);
+    while (true);
+//    this_thread::sleep_for(5s);
 
     delete ble_client;
     delete mqtt_client;
