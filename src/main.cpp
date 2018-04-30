@@ -78,8 +78,8 @@ int main()
     bridge_floorsensor();
 //    bridge_alarmlight();
 
-    while (true);
-//    this_thread::sleep_for(5s);
+    // Sleep until a signal arrives
+    pause();
 
     delete ble_client;
     delete mqtt_client;
