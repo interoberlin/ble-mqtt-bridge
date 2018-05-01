@@ -44,6 +44,11 @@ MQTTClient::~MQTTClient()
 
 bool MQTTClient::send_message(char* s, uint8_t length)
 {
+    if (!connected)
+    {
+        return false;
+    }
+
     // Send message - depending on QoS, mosquitto lib managed re-submission this the thread
     //
     // * NULL : Message Id (int *) this allow to latter get status of each message
@@ -91,23 +96,21 @@ void MQTTClient::on_message(const struct mosquitto_message* message)
     cout << ">> MQTT message received" << endl;
 
     if (ble_client == NULL)
+        // Not BLE device connected
         return;
 
+    // Don't forward empty messages
     if (message->payloadlen == 0)
         return;
 
-    static vector<uint8_t> v;
-    if (((uint8_t*) message->payload)[0] == 0)
+    // Convert message payload to vector
+    vector<uint8_t> v;
+    for (uint8_t i=0; i<message->payloadlen; i++)
     {
-        cout << ">> MQTT: Disabling alarmlight..." << endl;
-        v = {0};
-    }
-    else
-    {
-        cout << ">> MQTT: Enabling alarmlight..." << endl;
-        v = {1};
+        v.push_back(((uint8_t*) message->payload)[i]);
     }
 
+    // Output generated vector via BLE
     ble_client->write(v);
 }
 

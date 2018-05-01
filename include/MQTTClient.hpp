@@ -29,13 +29,15 @@ class MQTTClient: public mosqpp::mosquittopp
     void on_publish(int mid);
     void on_message(const struct mosquitto_message* message);
 
-  public:
     BLEClient* ble_client = NULL;
 
+  public:
     MQTTClient(const char* id, const char* topic, const char* host, int port);
     ~MQTTClient();
 
     bool send_message(char* s, uint8_t length);
+
+    void registerOnMessageEventReceiver(BLEClient* ble) { ble_client = ble; };
 };
 
 
