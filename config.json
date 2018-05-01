@@ -1,0 +1,48 @@
+{
+    "floorsensors": [
+        {
+            "beacon": {
+                "address": "4D:FA:10:CC:26:0D",
+                "sensors": [
+                    {
+                        "sensor": {
+                            "id": 1,
+                            "topic": "floorsensor/O1/",
+                            "checkerboardid": "O1",
+                            "index": "01"
+                        },
+                        "sensor": {
+                            "id": 2,
+                            "topic": "floorsensor/G9/",
+                            "checkerboardid": "G9",
+                            "index": "02"
+                            
+                        }
+                    }
+                ]
+            },
+            "beacon": {
+                "address": "4D:FA:10:CC:26:0D",
+                "sensors": [
+                    {
+                        "sensor": {
+                            "id": 0,
+                            "topic": "floorsensor/A5/",
+                            "checkerboardid": "A5",
+                            "index": "00"
+                        }
+                    },
+                    {
+                        "sensor": {
+                            "id": 1,
+                            "topic": "floorsensor/Z0/",
+                            "checkerboardid": "Z0",
+                            "index": "0"
+                        }
+                    }
+    
+                ]
+            }
+        }
+    ]
+}

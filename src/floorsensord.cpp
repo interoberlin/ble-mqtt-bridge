@@ -1,5 +1,7 @@
 
 #include <iostream>
+#include <fstream>
+#include <vector>
 #include <stddef.h>
 #include <unistd.h>
 #include <chrono>
@@ -9,7 +11,9 @@
 #include <BLEClient.hpp>
 #include <MQTTClient.hpp>
 
+#include <nlohmann/json.hpp>
 
+using json = nlohmann::json;
 using namespace std;
 using namespace std::chrono_literals;
 
@@ -23,58 +27,58 @@ using namespace std::chrono_literals;
 #define FLOORSENSOR_UUID_CHARACTERISTIC3    "00002014-0000-1000-8000-00805f9b34fb"
 
 
-MQTTClient* mqtt_client[2] = {NULL};
-BLEClient* ble_client[2] = {NULL};
+vector<MQTTClient*> mqtt_clients;
+vector<BLEClient*> ble_clients;
 
 
-void bridge_floorsensor()
+void bridge_floorsensor(json config)
 {
-    mqtt_client[0] = new MQTTClient(
-                            "floorsensor-daemon",
-                            "floorsensor/z0",
-                            "localhost",
-                            1883
-                            );
+    try {
+        MQTTClient* mqtt = new MQTTClient(
+                                "floorsensor-daemon",
+                                "floorsensor/z0",
+                                "localhost",
+                                1883
+                                );
+        mqtt_clients.push_back(mqtt);
 
-    ble_client[0] = new BLEClient(
-                            BLEClientRole::READER,
-                            FLOORSENSOR_BEACON_ADDRESS1,
-                            FLOORSENSOR_UUID_SERVICE,
-                            FLOORSENSOR_UUID_CHARACTERISTIC3
-                            );
-
-    ble_client[0]->registerReadEventReceiver(mqtt_client[0]);
-
-    mqtt_client[1] = new MQTTClient(
-                            "floorsensor-daemon",
-                            "floorsensor/y0",
-                            "localhost",
-                            1883
-                            );
-
-    ble_client[1] = new BLEClient(
-                            BLEClientRole::READER,
-                            FLOORSENSOR_BEACON_ADDRESS2,
-                            FLOORSENSOR_UUID_SERVICE,
-                            FLOORSENSOR_UUID_CHARACTERISTIC3
-                            );
-
-    ble_client[1]->registerReadEventReceiver(mqtt_client[1]);
+        BLEClient* ble = new BLEClient(
+                                BLEClientRole::READER,
+                                FLOORSENSOR_BEACON_ADDRESS2,
+                                FLOORSENSOR_UUID_SERVICE,
+                                FLOORSENSOR_UUID_CHARACTERISTIC3
+                                );
+        ble->registerReadEventReceiver(mqtt);
+        ble_clients.push_back(ble);
+    } catch (exception& e) {
+        cerr << e.what();
+    }
 }
 
 
 int main()
 {
-    bridge_floorsensor();
+    json config;
 
-//    while (true);
-//    this_thread::sleep_for(5s);
+    std::ifstream configuration_file ("config.json");
+    
+    try {
+        configuration_file >> config;
+    } catch (exception& e) {
+        cerr << e.what() << endl;
+    }
+
+    // bridge_floorsensor(config);
 
     // Sleep until a signal arrives
     pause();
 
-    delete ble_client[0];
-    delete mqtt_client[0];
-    delete ble_client[1];
-    delete mqtt_client[1];
+    // cleanup
+    for (std::vector<BLEClient*>::iterator it = ble_clients.begin(); it != ble_clients.end(); ++it) {
+        delete *it;
+    }
+
+    for (std::vector<MQTTClient*>::iterator it = mqtt_clients.begin(); it != mqtt_clients.end(); ++it) {
+        delete *it;
+    }
 }
