@@ -52,7 +52,7 @@ void bridge_floorsensor(json config)
     // constant bridge-values
     bridge_config.mqttClientName = "floorsensor-daemon";
     bridge_config.mqttHost = "localhost";
-    bridge_config.mqttPort = 1833;
+    bridge_config.mqttPort = 1883;
 
     bridge_config.bleClienRole = BLEClientRole::READER;
     bridge_config.bleService = FLOORSENSOR_UUID_SERVICE;
