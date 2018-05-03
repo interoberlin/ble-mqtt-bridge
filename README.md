@@ -41,7 +41,7 @@ $ sudo make install
 
 ### mosquitto MQTT 
 
-You need mosquitto running on port 1833.
+You need mosquitto running on port 1883.
 
 You can install it on ubuntu/debian with
 
