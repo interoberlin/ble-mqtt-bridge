@@ -2,35 +2,197 @@
   "beacons": [
     {
       "address": "4D:FA:10:CC:26:0D",
+      "owner": "Florian",
       "sensors": [
         {
-          "id": 1,
-          "topic": "floorsensor/O1/",
-          "checkerboardid": "O1",
-          "index": "01"
+          "id": 0,
+          "topic": "floorsensor/F1/",
+          "checkerboardid": "F1",
+          "index": "00"
         },
         {
-          "id": 2,
-          "topic": "floorsensor/G9/",
-          "checkerboardid": "G9",
-          "index": "02"
+          "id": 1,
+          "topic": "floorsensor/F2/",
+          "checkerboardid": "F2",
+          "index": "01"
         }
       ]
     },
     {
       "address": "F6:56:9D:78:F0:2E",
+      "owner": "Goetz",
       "sensors": [
         {
           "id": 0,
-          "topic": "floorsensor/A5/",
-          "checkerboardid": "A5",
+          "topic": "floorsensor/G1/",
+          "checkerboardid": "G1",
           "index": "00"
         },
         {
           "id": 1,
-          "topic": "floorsensor/Z0/",
-          "checkerboardid": "Z0",
-          "index": "0"
+          "topic": "floorsensor/G2/",
+          "checkerboardid": "G2",
+          "index": "01"
+        }
+      ]
+    },
+    {
+      "beacon": "0",
+      "address": "cc:a9:31:a9:cd:f6",
+      "owner": "Baumhaus",
+      "location": "North",
+      "sensors": [
+        {
+          "cable": "A",
+          "topic": "floorsensor/00/",
+          "index": "50"
+        },
+        {
+          "cable": "A",
+          "topic": "floorsensor/00/",
+          "index": "32"
+        },
+        {
+          "cable": "A",
+          "topic": "floorsensor/00/",
+          "index": "33"
+        },
+        {
+          "cable": "A",
+          "topic": "floorsensor/00/",
+          "index": "39"
+        },
+        {
+          "cable": "A",
+          "topic": "floorsensor/00/",
+          "index": "26"
+        }
+      ]
+    },
+    {
+      "beacon": "1",
+      "address": "d8:d1:f6:c6:94:5f",
+      "owner": "Baumhaus",
+      "location": "North-West",
+      "sensors": [
+        {
+          "cable": "B",
+          "topic": "floorsensor/00/",
+          "index": "40"
+        },
+        {
+          "cable": "B",
+          "topic": "floorsensor/00/",
+          "index": "42"
+        },
+        {
+          "cable": "B",
+          "topic": "floorsensor/00/",
+          "index": "31"
+        },
+        {
+          "cable": "B",
+          "topic": "floorsensor/00/",
+          "index": "34"
+        }
+      ]
+    },
+    {
+      "beacon": "2",
+      "address": "25:6b:08:a6:2e:c7",
+      "owner": "Baumhaus",
+      "location": "South-West",
+      "sensors": [
+        {
+          "cable": "C",
+          "topic": "floorsensor/00/",
+          "index": "37"
+        },
+        {
+          "cable": "C",
+          "topic": "floorsensor/00/",
+          "index": "38"
+        },
+        {
+          "cable": "C",
+          "topic": "floorsensor/00/",
+          "index": "49"
+        },
+        {
+          "cable": "C",
+          "topic": "floorsensor/00/",
+          "index": "45"
+        },
+        {
+          "cable": "C",
+          "topic": "floorsensor/00/",
+          "index": "41"
+        }
+      ]
+    },
+    {
+      "beacon": "3",
+      "address": "6d:ef:89:e0:8a:db",
+      "owner": "Baumhaus",
+      "location": "South-East",
+      "sensors": [
+        {
+          "cable": "D",
+          "topic": "floorsensor/00/",
+          "index": "35"
+        },
+        {
+          "cable": "D",
+          "topic": "floorsensor/00/",
+          "index": "44"
+        },
+        {
+          "cable": "D",
+          "topic": "floorsensor/00/",
+          "index": "36"
+        },
+        {
+          "cable": "D",
+          "topic": "floorsensor/00/",
+          "index": "47"
+        },
+        {
+          "cable": "D",
+          "topic": "floorsensor/00/",
+          "index": "43"
+        }
+      ]
+    },
+    {
+      "beacon": "4",
+      "address": "31:18:32:07:a7:4f",
+      "owner": "Baumhaus",
+      "location": "North-East",
+      "sensors": [
+        {
+          "cable": "E",
+          "topic": "floorsensor/00/",
+          "index": "28"
+        },
+        {
+          "cable": "E",
+          "topic": "floorsensor/00/",
+          "index": "24"
+        },
+        {
+          "cable": "E",
+          "topic": "floorsensor/00/",
+          "index": "20"
+        },
+        {
+          "cable": "E",
+          "topic": "floorsensor/00/",
+          "index": "12"
+        },
+        {
+          "cable": "E",
+          "topic": "floorsensor/00/",
+          "index": "09"
         }
       ]
     }
