@@ -8,6 +8,8 @@
 #include <thread>
 #include <pthread.h>
 #include <time.h>
+#include <getopt.h>
+#include <stdlib.h>
 #include <Bridge.hpp>
 
 #include <nlohmann/json.hpp>
@@ -17,15 +19,18 @@ using namespace std;
 using namespace std::chrono_literals;
 
 // Dem Dingens vom Flo
-#define FLOORSENSOR_BEACON_ADDRESS1         "4D:FA:10:CC:26:0D"
+// #define FLOORSENSOR_BEACON_ADDRESS1         "4D:FA:10:CC:26:0D"
 // Dem Dingens vom Götz
-#define FLOORSENSOR_BEACON_ADDRESS2         "F6:56:9D:78:F0:2E"
+// #define FLOORSENSOR_BEACON_ADDRESS2         "F6:56:9D:78:F0:2E"
 
 #define FLOORSENSOR_UUID_SERVICE            "00002011-0000-1000-8000-00805f9b34fb"
 #define FLOORSENSOR_UUID_CHARACTERISTIC1    "00002012-0000-1000-8000-00805f9b34fb"
 #define FLOORSENSOR_UUID_CHARACTERISTIC2    "00002013-0000-1000-8000-00805f9b34fb"
 #define FLOORSENSOR_UUID_CHARACTERISTIC3    "00002014-0000-1000-8000-00805f9b34fb"
 
+// command line option global vars
+bool config_check_flag;
+unsigned debug_flag = 0;
 
 vector<Bridge*> bridges;
 
@@ -44,16 +49,6 @@ void bridge_floorsensor(json config)
         std::string bleCharacteristic;
     } bridge_config;
 
-    // for (auto& element : config["beacons"]) {
-    //     cout << "sensors : " << element["sensors"] << "\n" << flush;
-    //     // sensors : [{"checkerboardid":"O1","id":1,"index":"01","topic":"floorsensor/O1/"},{"checkerboardid":"G9","id":2,"index":"02","topic":"floorsensor/G9/"}]
-    //     // sensors : [{"checkerboardid":"A5","id":0,"index":"00","topic":"floorsensor/A5/"},{"checkerboardid":"Z0","id":1,"index":"0","topic":"floorsensor/Z0/"}]
-    // }
-
-    // cout << config["beacons"].size() << endl << flush;
-    // cout << config["beacons"][0] << endl << flush;
-    // cout << "BLE Address: " << config["beacons"][0]["address"] << endl << flush;
-
     // constant bridge-values
     bridge_config.mqttClientName = "floorsensor-daemon";
     bridge_config.mqttHost = "localhost";
@@ -68,43 +63,56 @@ void bridge_floorsensor(json config)
 
         
         bridge_config.bleAddress = config["beacons"][beacon]["address"];
-        // bridge_config.bleAddress.erase(remove( bridge_config.bleAddress.begin(), bridge_config.bleAddress.end(), '\"' ), bridge_config.bleAddress.end());
         cout << " " << beacon << ": [" << bridge_config.bleAddress << "]" << endl <<flush;
 
        for (uint sensor = 0; sensor < config["beacons"][beacon]["sensors"].size(); sensor++) {
 
            bridge_config.mqttTopic = config["beacons"][beacon]["sensors"][sensor]["topic"];
-        //    bridge_config.mqttTopic.erase(remove( bridge_config.mqttTopic.begin(), bridge_config.mqttTopic.end(), '\"' ),   bridge_config.mqttTopic.end());
            cout << "    " << sensor << ": [" << bridge_config.mqttTopic << "]" << endl << flush; 
 
         } // sensor
         
         try {
-            Bridge* bridge = new Bridge(
-                                bridge_config.mqttClientName.c_str(),
-                                bridge_config.mqttTopic.c_str(),
-                                bridge_config.mqttHost.c_str(),
-                                bridge_config.mqttPort,
-                                bridge_config.bleClienRole,
-                                bridge_config.bleAddress,
-                                bridge_config.bleService,
-                                bridge_config.bleCharacteristic 
-                                );
-            bridges.push_back(bridge);
+            cout << ">> define " << bridge_config.bleAddress << "->" << bridge_config.mqttTopic << endl << flush;
+
+            if ( !config_check_flag ) {
+                Bridge* bridge = new Bridge(
+                                        bridge_config.mqttClientName.c_str(),
+                                        bridge_config.mqttTopic.c_str(),
+                                        bridge_config.mqttHost.c_str(),
+                                        bridge_config.mqttPort,
+                                        bridge_config.bleClienRole,
+                                        bridge_config.bleAddress,
+                                        bridge_config.bleService,
+                                        bridge_config.bleCharacteristic 
+                                    );
+                bridges.push_back(bridge);
+            } // config_check_flag
 
         } catch (exception& e) {
             cerr << e.what();
         }
+    
     } // beacon
     
 }
 
-
-int main()
+int main(int argc, char* argv[])
 {
     json floorsensor_config;
 
     std::ifstream configuration_file ("floorsensor_config.json");
+    
+    int option_char;
+
+    while ((option_char = getopt (argc, argv, "cd:")) != EOF) {
+        switch (option_char) {  
+            case 'd': debug_flag = atoi(optarg); break;
+            case 'c': config_check_flag = true; break;
+            default:
+            case '?': cerr << "usage: " << argv[0] << " [cd<val>]" << endl;
+        }
+    }
     
     try {
         floorsensor_config = json::parse(configuration_file);
@@ -114,11 +122,14 @@ int main()
 
     bridge_floorsensor(floorsensor_config);
 
-    // Sleep until a signal arrives
-    pause();
+    if ( !config_check_flag ) {
+        // Sleep until a signal arrives
+        pause();
 
-    // cleanup, destroy all bridges
-    for (std::vector<Bridge*>::iterator it = bridges.begin(); it != bridges.end(); ++it) {
-        delete *it;
-    }
+        // cleanup, destroy all bridges
+        for (std::vector<Bridge*>::iterator it = bridges.begin(); it != bridges.end(); ++it) {
+            delete *it;
+        }
+    } // config_check_flag
+
 }
