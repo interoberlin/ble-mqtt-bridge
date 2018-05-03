@@ -169,7 +169,7 @@ void BLEClient::startConnectionThread()
     int rc = pthread_create(&connection_thread_id, NULL, &bleclient_connection_thread, this);
     if (rc != 0)
     {
-        printf("Error: Unable to start connection thread.\n");
+        cerr << "!! BLE: Error: Unable to start connection thread." << endl;
         return;
     }
 
@@ -247,13 +247,13 @@ void BLEClient::startReaderThread()
 {
     if (reader_thread_running)
     {
-        printf("Reader thread already running with ID %d.\n", (int) reader_thread_id);
+        cerr << "!! Reader thread already running with ID " <<  reader_thread_id << endl;
         return;
     }
 
     if (role != BLEClientRole::READER)
     {
-        printf("Won't start reader thread: This object's role is not READER.");
+        cerr << "!! Won't start reader thread: This object's role is not READER." << endl;
         return;
     }
 
@@ -261,7 +261,7 @@ void BLEClient::startReaderThread()
     int rc = pthread_create(&reader_thread_id, NULL, &bleclient_reader_thread, this);
     if (rc != 0)
     {
-        printf("Error: Unable to start reader thread.\n");
+        cerr << "Error: Unable to start reader thread" << endl;
         return;
     }
 
