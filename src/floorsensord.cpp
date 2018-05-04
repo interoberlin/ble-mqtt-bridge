@@ -29,7 +29,7 @@ using namespace std::chrono_literals;
 #define FLOORSENSOR_UUID_CHARACTERISTIC3    "00002014-0000-1000-8000-00805f9b34fb"
 
 // command line option global vars
-bool config_check_flag;
+bool config_check_flag = false;
 unsigned debug_flag = 0;
 
 vector<Bridge*> bridges;
@@ -45,6 +45,8 @@ void bridge_floorsensor(json config)
         int mqttPort;
         BLEClientRole::role_enum bleClienRole;
         std::string bleAddress;
+        std::string bleOwner;
+        std::string bleLocation;
         std::string bleService;
         std::string bleCharacteristic;
     } bridge_config;
@@ -61,19 +63,32 @@ void bridge_floorsensor(json config)
     //  parse the json-config
     for (uint beacon = 0; beacon < config["beacons"].size(); beacon++) {
 
-        
         bridge_config.bleAddress = config["beacons"][beacon]["address"];
-        cout << " " << beacon << ": [" << bridge_config.bleAddress << "]" << endl <<flush;
+        bridge_config.bleOwner   = config["beacons"][beacon]["owner"];
+        bridge_config.bleLocation= \
+                config["beacons"][beacon]["location"].empty()?\
+                "NotDefined":\
+                config["beacons"][beacon]["location"];
 
-       for (uint sensor = 0; sensor < config["beacons"][beacon]["sensors"].size(); sensor++) {
+        if ( debug_flag > 0 ) {
+            cout << " " << beacon << ": [" << bridge_config.bleAddress << "]" 
+                 << " " << "[" << bridge_config.bleOwner << "]"
+                 << " " << "[" << bridge_config.bleLocation << "]"             << endl << flush;
+        }
+        
+        for (uint sensor = 0; sensor < config["beacons"][beacon]["sensors"].size(); sensor++) {
 
            bridge_config.mqttTopic = config["beacons"][beacon]["sensors"][sensor]["topic"];
-           cout << "    " << sensor << ": [" << bridge_config.mqttTopic << "]" << endl << flush; 
 
+           if ( debug_flag > 0 ) {
+                cout << "    " << sensor << ": [" << bridge_config.mqttTopic << "]" << endl << flush; 
+           }
         } // sensor
         
         try {
-            cout << ">> define " << bridge_config.bleAddress << "->" << bridge_config.mqttTopic << endl << flush;
+            if ( debug_flag > 0 ) {
+                cout << ">> define " << bridge_config.bleAddress << "->" << bridge_config.mqttTopic << endl << flush;
+            }
 
             if ( !config_check_flag ) {
                 Bridge* bridge = new Bridge(
@@ -105,12 +120,11 @@ int main(int argc, char* argv[])
     
     int option_char;
 
-    while ((option_char = getopt (argc, argv, "cd:")) != EOF) {
+    while ((option_char = getopt (argc, argv, "cd:?")) != EOF) {
         switch (option_char) {  
             case 'd': debug_flag = atoi(optarg); break;
-            case 'c': config_check_flag = true; break;
-            default:
-            case '?': cerr << "usage: " << argv[0] << " [cd<val>]" << endl;
+            case 'c': config_check_flag = true; debug_flag = 1; break;
+            case '?': cerr << "usage: " << argv[0] << " [cd<val>]" << endl; break;
         }
     }
     
