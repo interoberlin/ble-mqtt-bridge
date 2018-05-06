@@ -1,120 +1,183 @@
-// SDS011 dust sensor PM2.5 and PM10
-// ---------------------
-//
-// By R. Zschiegner (rz@madavi.de)
-// April 2016
-//
-// Documentation:
-//		- The iNovaFitness SDS011 datasheet
-//
 
-#include "SDS011.h"
+#include "SDS011.hpp"
 
-static const byte SLEEPCMD[19] = {
-	0xAA,	// head
-	0xB4,	// command id
-	0x06,	// data byte 1
-	0x01,	// data byte 2 (set mode)
-	0x00,	// data byte 3 (sleep)
-	0x00,	// data byte 4
-	0x00,	// data byte 5
-	0x00,	// data byte 6
-	0x00,	// data byte 7
-	0x00,	// data byte 8
-	0x00,	// data byte 9
-	0x00,	// data byte 10
-	0x00,	// data byte 11
-	0x00,	// data byte 12
-	0x00,	// data byte 13
-	0xFF,	// data byte 14 (device id byte 1)
-	0xFF,	// data byte 15 (device id byte 2)
-	0x05,	// checksum
-	0xAB	// tail
+using namespace std;
+
+
+static const uint8_t SLEEPCMD[19] =
+{
+    0xAA,	// head
+    0xB4,	// command id
+    0x06,	// data byte 1
+    0x01,	// data byte 2 (set mode)
+    0x00,	// data byte 3 (sleep)
+    0x00,	// data byte 4
+    0x00,	// data byte 5
+    0x00,	// data byte 6
+    0x00,	// data byte 7
+    0x00,	// data byte 8
+    0x00,	// data byte 9
+    0x00,	// data byte 10
+    0x00,	// data byte 11
+    0x00,	// data byte 12
+    0x00,	// data byte 13
+    0xFF,	// data byte 14 (device id byte 1)
+    0xFF,	// data byte 15 (device id byte 2)
+    0x05,	// checksum
+    0xAB	// tail
 };
 
-SDS011::SDS011(void) {
 
+SDS011::SDS011(string device_path)
+{
+    // Free previously created port objects
+    if (port != NULL)
+        delete port;
+
+    port = new SerialPort();
+    port->Open(device_path.c_str(), 9600);
 }
 
-// --------------------------------------------------------
-// SDS011:read
-// --------------------------------------------------------
-int SDS011::read(float *p25, float *p10) {
-	byte buffer;
-	int value;
-	int len = 0;
-	int pm10_serial = 0;
-	int pm25_serial = 0;
-	int checksum_is;
-	int checksum_ok = 0;
-	int error = 1;
-	while ((sds_data->available() > 0) && (sds_data->available() >= (10-len))) {
-		buffer = sds_data->read();
-		value = int(buffer);
-		switch (len) {
-			case (0): if (value != 170) { len = -1; }; break;
-			case (1): if (value != 192) { len = -1; }; break;
-			case (2): pm25_serial = value; checksum_is = value; break;
-			case (3): pm25_serial += (value << 8); checksum_is += value; break;
-			case (4): pm10_serial = value; checksum_is += value; break;
-			case (5): pm10_serial += (value << 8); checksum_is += value; break;
-			case (6): checksum_is += value; break;
-			case (7): checksum_is += value; break;
-			case (8): if (value == (checksum_is % 256)) { checksum_ok = 1; } else { len = -1; }; break;
-			case (9): if (value != 171) { len = -1; }; break;
-		}
-		len++;
-		if (len == 10 && checksum_ok == 1) {
-			*p10 = (float)pm10_serial/10.0;
-			*p25 = (float)pm25_serial/10.0;
-			len = 0; checksum_ok = 0; pm10_serial = 0.0; pm25_serial = 0.0; checksum_is = 0;
-			error = 0;
-		}
-		yield();
-	}
-	return error;
+
+SDS011::~SDS011()
+{
+    port->Close();
+    delete port;
 }
 
-// --------------------------------------------------------
-// SDS011:sleep
-// --------------------------------------------------------
-void SDS011::sleep() {
-	for (uint8_t i = 0; i < 19; i++) {
-		sds_data->write(SLEEPCMD[i]);
-	}
-	sds_data->flush();
-	while (sds_data->available() > 0) {
-		sds_data->read();
-	}
+
+void SDS011::readSerialPort()
+{
+    // Read bytes from serial port
+    uint8_t buf[20];
+    int count = port->Read(buf, sizeof(buffer));
+
+    // Push them to our local queue
+    for (uint8_t i=0; i<count; i++)
+    {
+        buffer.push(buf[i]);
+    }
 }
 
-// --------------------------------------------------------
-// SDS011:wakeup
-// --------------------------------------------------------
-void SDS011::wakeup() {
-	sds_data->write(0x01);
-	sds_data->flush();
+
+bool SDS011::read(float *p25, float *p10, uint16_t* id)
+{
+    readSerialPort();
+    if (buffer.size() < 10)
+    {
+        // Not enough data received (yet)
+        return false;
+    }
+
+    int pm10_raw = 0;
+    int pm25_raw = 0;
+    int checksum_reference;
+    bool checksum_ok = false;
+    int state = 0;
+    uint16_t _id = 0;
+
+    while (buffer.size() > 0)
+    {
+        // Grab one byte from the buffer
+        int value = buffer.front();
+        buffer.pop();
+
+        // Main parser state machine
+        switch (state)
+        {
+            case 0:
+                if (value != 170)   // 0xAA
+                {
+                    state = -1;
+                }
+                break;
+            case 1:
+                if (value != 192)   // 0xC0
+                {
+                    state = -1;
+                }
+                break;
+            case 2:
+                pm25_raw = value;
+                checksum_reference = value;
+                break;
+            case 3:
+                pm25_raw += (value << 8);
+                checksum_reference += value;
+                break;
+            case 4:
+                pm10_raw = value;
+                checksum_reference += value;
+                break;
+            case 5:
+                pm10_raw += (value << 8);
+                checksum_reference += value;
+                break;
+            case 6:
+                _id = value;
+                checksum_reference += value;
+                break;
+            case 7:
+                _id += (value << 8);
+                checksum_reference += value;
+                break;
+            case 8:
+                if (value == (checksum_reference % 256))
+                {
+                    checksum_ok = true;
+                }
+                else
+                {
+                    state = -1;
+                }
+                break;
+            case 9:
+                if (value != 171)   // 0xAB
+                {
+                    state = -1;
+                }
+                break;
+            default:
+                // Transaction complete
+                if (!checksum_ok)
+                    // Checksum error
+                    return false;
+
+                // Calculate real sensor values
+                if (p10 != NULL)
+                    *p10 = (float) pm10_raw / 10.0;
+                if (p25 != NULL)
+                    *p25 = (float) pm25_raw / 10.0;
+                if (id != NULL)
+                    *id = _id;
+
+                // Success!
+                return true;
+                break;
+        }
+        state++;
+
+        readSerialPort();
+    }
+
+    // If we arrive here, parsing has failed.
+    return false;
 }
 
-void SDS011::begin(uint8_t pin_rx, uint8_t pin_tx) {
-	_pin_rx = pin_rx;
-	_pin_tx = pin_tx;
 
-	SoftwareSerial *softSerial = new SoftwareSerial(_pin_rx, _pin_tx);
-
-	//Initialize the 'Wire' class for I2C-bus communication.
-	softSerial->begin(9600);
-
-	sds_data = softSerial;
+void SDS011::sleep()
+{
+    for (uint8_t i = 0; i < 19; i++)
+    {
+        port->Write(SLEEPCMD[i]);
+    }
+    port->Flush();
 }
 
-void SDS011::begin(HardwareSerial* serial) {
-	serial->begin(9600);
-	sds_data = serial;
-}
 
-void SDS011::begin(SoftwareSerial* serial) {
-	serial->begin(9600);
-	sds_data = serial;
+void SDS011::wakeup()
+{
+    port->Write(0x01);
+    port->Flush();
 }
 
