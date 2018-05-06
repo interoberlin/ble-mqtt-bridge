@@ -25,18 +25,22 @@ int main()
 	    sensor->read(NULL, NULL, &id);
 	    this_thread::sleep_for(1s);
 	}
-	cout << "Got sensor id #" << id << "." << endl << flush;
+	cout << "Got sensor " << hex << id << "." << endl << flush;
 
-    MQTTClient* mqtt10 = new MQTTClient(
+	char topic[42];
+
+	snprintf(topic, sizeof(topic), "dustsensor/%x/pm10", id);
+	MQTTClient* mqtt10 = new MQTTClient(
                             "dustsensord",
-                            "dustsensor/id/pm10",
+                            topic,
                             "192.168.10.239",
                             1883
                             );
 
+    snprintf(topic, sizeof(topic), "dustsensor/%x/pm2.5", id);
     MQTTClient* mqtt25 = new MQTTClient(
                             "dustsensord",
-                            "dustsensor/id/pm25",
+                            topic,
                             "192.168.10.239",
                             1883
                             );
@@ -46,7 +50,7 @@ int main()
 	{
 		if (sensor->read(&p25, &p10, &id))
 		{
-            printf("Sensor #%d: PM2.5=%f, PM10=%f\n", id, p25, p10);
+            printf("Sensor %x: PM2.5=%f, PM10=%f\n", id, p25, p10);
             mqtt10->sendFloat(&p10);
             mqtt25->sendFloat(&p25);
 		}

@@ -1,5 +1,5 @@
 
-MAIN = main
+MAIN = dustsensord
 
 CC = gcc
 CPP = g++

@@ -116,11 +116,11 @@ bool SDS011::read(float *p25, float *p10, uint16_t* id)
                 checksum_reference += value;
                 break;
             case 6:
-                _id = value;
+                _id = (value << 8);
                 checksum_reference += value;
                 break;
             case 7:
-                _id += (value << 8);
+                _id += value;
                 checksum_reference += value;
                 break;
             case 8:
