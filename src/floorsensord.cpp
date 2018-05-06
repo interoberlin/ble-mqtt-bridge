@@ -30,7 +30,8 @@ using namespace std::chrono_literals;
 
 // command line option global vars
 bool config_check_flag = false;
-unsigned debug_flag = 0;
+typedef enum { DEBUG_NONE=0, DEBUG_NORMAL, DEBUG_MORE, DEBUG_MOST, DEBUG_ALL=9} debug_flags;
+debug_flags debug_flag = DEBUG_NONE;
 
 vector<Bridge*> bridges;
 
@@ -70,23 +71,23 @@ void bridge_floorsensor(json config)
                 "NotDefined":\
                 config["beacons"][beacon]["location"];
 
-        if ( debug_flag > 0 ) {
-            cout << " " << beacon << ": [" << bridge_config.bleAddress << "]" 
+        if ( debug_flag > DEBUG_MORE ) {
+            cout << " " << beacon << ": [" << bridge_config.bleAddress << "]"
                  << " " << "[" << bridge_config.bleOwner << "]"
                  << " " << "[" << bridge_config.bleLocation << "]"             << endl << flush;
         }
-        
+
         for (uint sensor = 0; sensor < config["beacons"][beacon]["sensors"].size(); sensor++) {
 
            bridge_config.mqttTopic = config["beacons"][beacon]["sensors"][sensor]["topic"];
 
-           if ( debug_flag > 0 ) {
-                cout << "    " << sensor << ": [" << bridge_config.mqttTopic << "]" << endl << flush; 
+           if ( debug_flag > DEBUG_MORE ) {
+                cout << "    " << sensor << ": [" << bridge_config.mqttTopic << "]" << endl << flush;
            }
         } // sensor
-        
+
         try {
-            if ( debug_flag > 0 ) {
+            if ( debug_flag > DEBUG_NORMAL ) {
                 cout << ">> define " << bridge_config.bleAddress << "->" << bridge_config.mqttTopic << endl << flush;
             }
 
@@ -99,7 +100,7 @@ void bridge_floorsensor(json config)
                                         bridge_config.bleClienRole,
                                         bridge_config.bleAddress,
                                         bridge_config.bleService,
-                                        bridge_config.bleCharacteristic 
+                                        bridge_config.bleCharacteristic
                                     );
                 bridges.push_back(bridge);
             } // config_check_flag
@@ -107,27 +108,37 @@ void bridge_floorsensor(json config)
         } catch (exception& e) {
             cerr << e.what();
         }
-    
+
     } // beacon
-    
+
 }
 
 int main(int argc, char* argv[])
 {
     json floorsensor_config;
+    std::string floorsensor_config_filename = "floorsensor_config.json"; 
 
-    std::ifstream configuration_file ("floorsensor_config.json");
-    
     int option_char;
 
-    while ((option_char = getopt (argc, argv, "cd:?")) != EOF) {
-        switch (option_char) {  
-            case 'd': debug_flag = atoi(optarg); break;
-            case 'c': config_check_flag = true; debug_flag = 1; break;
-            case '?': cerr << "usage: " << argv[0] << " [cd<val>]" << endl; break;
+    while ((option_char = getopt (argc, argv, "cd:f:?")) != EOF) {
+        switch (option_char) {
+            case 'd': 
+                debug_flag = (debug_flags) atoi(optarg); 
+                break;
+            case 'c': 
+                config_check_flag = true; 
+                debug_flag = DEBUG_ALL; 
+                break;
+            case 'f': 
+                floorsensor_config_filename = optarg; 
+                break;
+            case '?':
+                 cerr << "usage: " << argv[0] << " [cf<val>d<val>]" << endl; break;
         }
     }
-    
+
+    std::ifstream configuration_file (floorsensor_config_filename);
+
     try {
         floorsensor_config = json::parse(configuration_file);
     } catch (exception& e) {
