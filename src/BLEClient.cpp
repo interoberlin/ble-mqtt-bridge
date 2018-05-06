@@ -1,4 +1,3 @@
-
 #include <BLEClient.hpp>
 #include <MQTTClient.hpp>
 #include <iostream>
@@ -159,12 +158,11 @@ static void* bleclient_connection_thread(void* argv)
     return NULL;
 }
 
-
 void BLEClient::startConnectionThread()
 {
     if (connection_thread_running)
         return;
-
+    
     terminate_connection_thread = false;
     int rc = pthread_create(&connection_thread_id, NULL, &bleclient_connection_thread, this);
     if (rc != 0)
@@ -172,6 +170,7 @@ void BLEClient::startConnectionThread()
         cerr << "!! BLE: Error: Unable to start connection thread." << endl;
         return;
     }
+    pthread_setname_np(connection_thread_id, "ble-conn-mgr");
 
     connection_thread_running = true;
 }
@@ -187,6 +186,8 @@ void BLEClient::stopConnectionThread()
 
     // Wait for thread to actually terminate
     pthread_join(connection_thread_id, NULL);
+
+    connection_thread_running = false;
 }
 
 
