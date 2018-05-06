@@ -43,7 +43,7 @@ MQTTClient::~MQTTClient()
 }
 
 
-bool MQTTClient::send_message(char* s, uint8_t length)
+bool MQTTClient::sendMessage(char* s, uint8_t length)
 {
     if (!connected)
     {
@@ -64,16 +64,24 @@ bool MQTTClient::send_message(char* s, uint8_t length)
 }
 
 
+bool MQTTClient::sendFloat(float* f)
+{
+    char s[30];
+    snprintf(s, 30, "%0.01f", *f);
+    return sendMessage(s, strlen(s));
+}
+
+
 void MQTTClient::on_connect(int rc)
 {
     if (rc == 0)
     {
-        cout << ">> Connected to MQTT broker" << endl;
+//        cout << ">> Connected to MQTT broker" << endl;
         connected = true;
     }
     else
     {
-        cout << ">> Unable to connect to MQTT broker (return code " << rc << ")" << endl;
+//        cout << ">> Unable to connect to MQTT broker (return code " << rc << ")" << endl;
         connected = false;
     }
 }
@@ -81,14 +89,14 @@ void MQTTClient::on_connect(int rc)
 
 void MQTTClient::on_disconnect(int rc)
 {
-    cout << ">> MQTT broker disconnected (" << rc << ")" << endl;
+//    cout << ">> MQTT broker disconnected (" << rc << ")" << endl;
     connected = false;
 }
 
 
 void MQTTClient::on_publish(int mid)
 {
-    cout << ">> MQTT message published (" << mid << ")" << endl;
+//    cout << ">> MQTT message published (" << mid << ")" << endl;
 }
 
 

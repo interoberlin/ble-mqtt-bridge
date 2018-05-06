@@ -31,7 +31,8 @@ class MQTTClient: public mosqpp::mosquittopp
     MQTTClient(const char* id, const char* topic, const char* host, int port);
     ~MQTTClient();
 
-    bool send_message(char* s, uint8_t length);
+    bool sendMessage(char* s, uint8_t length);
+    bool sendFloat(float* f);
 };
 
 
