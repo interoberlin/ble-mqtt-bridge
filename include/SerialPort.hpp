@@ -3,6 +3,8 @@
 #ifndef SERIAL_PORT_H_
 #define SERIAL_PORT_H_
 
+#include <stdint.h>
+
 class SerialPort
 {
 
@@ -15,6 +17,7 @@ public:
 
 	int Read( void*, int );
 	int Write( const void*, int );
+	int Write( uint8_t );
 	void Flush();
 
 protected:

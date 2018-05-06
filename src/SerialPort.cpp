@@ -47,6 +47,12 @@ int SerialPort::Read(void* buf, int length)
 	return rd;
 }
 
+int SerialPort::Write(uint8_t i) {
+	char buf[2];
+	sprintf(buf, "%d", i);
+	Write(&buf, 1);
+}
+
 int SerialPort::Write(const void* buf, int len)
 {
 	int wr;
