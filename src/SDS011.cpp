@@ -1,5 +1,6 @@
 
 #include "SDS011.hpp"
+#include <iostream>
 
 using namespace std;
 
@@ -49,8 +50,8 @@ SDS011::~SDS011()
 void SDS011::readSerialPort()
 {
     // Read bytes from serial port
-    uint8_t buf[20];
-    int count = port->Read(buf, sizeof(buffer));
+    uint8_t buf[42];
+    int count = port->Read(buf, sizeof(buf));
 
     // Push them to our local queue
     for (uint8_t i=0; i<count; i++)
@@ -63,9 +64,10 @@ void SDS011::readSerialPort()
 bool SDS011::read(float *p25, float *p10, uint16_t* id)
 {
     readSerialPort();
-    if (buffer.size() < 10)
+    if (buffer.empty())
     {
         // Not enough data received (yet)
+        printf("Not enough data received yet.\n");
         return false;
     }
 
@@ -76,10 +78,10 @@ bool SDS011::read(float *p25, float *p10, uint16_t* id)
     int state = 0;
     uint16_t _id = 0;
 
-    while (buffer.size() > 0)
+    while (!buffer.empty())
     {
         // Grab one byte from the buffer
-        int value = buffer.front();
+        uint8_t value = buffer.front();
         buffer.pop();
 
         // Main parser state machine
@@ -129,6 +131,7 @@ bool SDS011::read(float *p25, float *p10, uint16_t* id)
                 else
                 {
                     state = -1;
+                    cerr << "Checksum error" << endl;
                 }
                 break;
             case 9:
@@ -136,28 +139,27 @@ bool SDS011::read(float *p25, float *p10, uint16_t* id)
                 {
                     state = -1;
                 }
-                break;
-            default:
-                // Transaction complete
-                if (!checksum_ok)
-                    // Checksum error
-                    return false;
+                else
+                {
+                    // Transaction complete
+                    if (!checksum_ok)
+                        // Checksum error
+                        return false;
 
-                // Calculate real sensor values
-                if (p10 != NULL)
-                    *p10 = (float) pm10_raw / 10.0;
-                if (p25 != NULL)
-                    *p25 = (float) pm25_raw / 10.0;
-                if (id != NULL)
-                    *id = _id;
+                    // Calculate real sensor values
+                    if (p10 != NULL)
+                        *p10 = (float) pm10_raw / 10.0;
+                    if (p25 != NULL)
+                        *p25 = (float) pm25_raw / 10.0;
+                    if (id != NULL)
+                        *id = _id;
 
-                // Success!
-                return true;
+                    // Success!
+                    return true;
+                }
                 break;
         }
         state++;
-
-        readSerialPort();
     }
 
     // If we arrive here, parsing has failed.
