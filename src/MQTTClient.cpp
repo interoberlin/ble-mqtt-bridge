@@ -1,8 +1,9 @@
 
 #include <MQTTClient.hpp>
-#include <BLEClient.hpp>
 #include <iostream>
 #include <string.h>
+
+using namespace std;
 
 
 MQTTClient::MQTTClient(
@@ -91,26 +92,7 @@ void MQTTClient::on_publish(int mid)
 }
 
 
-void MQTTClient::on_message(const struct mosquitto_message* message)
-{
-    cout << ">> MQTT message received" << endl;
-
-    if (ble_client == NULL)
-        // Not BLE device connected
-        return;
-
-    // Don't forward empty messages
-    if (message->payloadlen == 0)
-        return;
-
-    // Convert message payload to vector
-    vector<uint8_t> v;
-    for (uint8_t i=0; i<message->payloadlen; i++)
-    {
-        v.push_back(((uint8_t*) message->payload)[i]);
-    }
-
-    // Output generated vector via BLE
-    ble_client->write(v);
-}
+//void MQTTClient::on_message(const struct mosquitto_message* message)
+//{
+//}
 
