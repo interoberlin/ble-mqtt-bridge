@@ -44,27 +44,27 @@
       "sensors": [
         {
           "cable": "A",
-          "topic": "floorsensor/00/",
+          "topic": "floorsensor/50/",
           "index": "50"
         },
         {
           "cable": "A",
-          "topic": "floorsensor/00/",
+          "topic": "floorsensor/32/",
           "index": "32"
         },
         {
           "cable": "A",
-          "topic": "floorsensor/00/",
+          "topic": "floorsensor/33/",
           "index": "33"
         },
         {
           "cable": "A",
-          "topic": "floorsensor/00/",
+          "topic": "floorsensor/39/",
           "index": "39"
         },
         {
           "cable": "A",
-          "topic": "floorsensor/00/",
+          "topic": "floorsensor/26/",
           "index": "26"
         }
       ]
@@ -77,22 +77,22 @@
       "sensors": [
         {
           "cable": "B",
-          "topic": "floorsensor/00/",
+          "topic": "floorsensor/40/",
           "index": "40"
         },
         {
           "cable": "B",
-          "topic": "floorsensor/00/",
+          "topic": "floorsensor/42/",
           "index": "42"
         },
         {
           "cable": "B",
-          "topic": "floorsensor/00/",
+          "topic": "floorsensor/31/",
           "index": "31"
         },
         {
           "cable": "B",
-          "topic": "floorsensor/00/",
+          "topic": "floorsensor/34/",
           "index": "34"
         }
       ]
@@ -105,27 +105,27 @@
       "sensors": [
         {
           "cable": "C",
-          "topic": "floorsensor/00/",
+          "topic": "floorsensor/37/",
           "index": "37"
         },
         {
           "cable": "C",
-          "topic": "floorsensor/00/",
+          "topic": "floorsensor/38/",
           "index": "38"
         },
         {
           "cable": "C",
-          "topic": "floorsensor/00/",
+          "topic": "floorsensor/49/",
           "index": "49"
         },
         {
           "cable": "C",
-          "topic": "floorsensor/00/",
+          "topic": "floorsensor/45/",
           "index": "45"
         },
         {
           "cable": "C",
-          "topic": "floorsensor/00/",
+          "topic": "floorsensor/41/",
           "index": "41"
         }
       ]
@@ -138,27 +138,27 @@
       "sensors": [
         {
           "cable": "D",
-          "topic": "floorsensor/00/",
+          "topic": "floorsensor/35/",
           "index": "35"
         },
         {
           "cable": "D",
-          "topic": "floorsensor/00/",
+          "topic": "floorsensor/44/",
           "index": "44"
         },
         {
           "cable": "D",
-          "topic": "floorsensor/00/",
+          "topic": "floorsensor/36/",
           "index": "36"
         },
         {
           "cable": "D",
-          "topic": "floorsensor/00/",
+          "topic": "floorsensor/47/",
           "index": "47"
         },
         {
           "cable": "D",
-          "topic": "floorsensor/00/",
+          "topic": "floorsensor/43/",
           "index": "43"
         }
       ]
@@ -171,27 +171,27 @@
       "sensors": [
         {
           "cable": "E",
-          "topic": "floorsensor/00/",
+          "topic": "floorsensor/28/",
           "index": "28"
         },
         {
           "cable": "E",
-          "topic": "floorsensor/00/",
+          "topic": "floorsensor/24/",
           "index": "24"
         },
         {
           "cable": "E",
-          "topic": "floorsensor/00/",
+          "topic": "floorsensor/20/",
           "index": "20"
         },
         {
           "cable": "E",
-          "topic": "floorsensor/00/",
+          "topic": "floorsensor/12/",
           "index": "12"
         },
         {
           "cable": "E",
-          "topic": "floorsensor/00/",
+          "topic": "floorsensor/09/",
           "index": "09"
         }
       ]
