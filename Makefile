@@ -16,12 +16,12 @@ LDFLAGS += -lpthread
 LDFLAGS += -lmosquittopp
 
 
-all: $(MAIN).elf
+all: $(MAIN)
 
-run: $(MAIN).elf
+run: $(MAIN)
 	./$^
 
-$(MAIN).elf: $(OBJS)
+$(MAIN): $(OBJS)
 	$(CPP) $(LDFLAGS) -o $@ $^
 
 %.o: %.cpp

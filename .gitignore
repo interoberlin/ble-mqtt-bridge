@@ -2,6 +2,7 @@
 # Generated
 *.o
 *.elf
+joystickd
 
 # Eclipse
 .project
