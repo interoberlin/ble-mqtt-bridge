@@ -4,7 +4,7 @@
 #include <iostream>
 #include "Joystick.hpp"
 #include "MQTTClient.hpp"
-#include "EventProcessor.hpp"
+#include "Steering.hpp"
 
 using namespace std;
 
@@ -34,9 +34,9 @@ int main()
                             );
 
     // Create event processor
-    JoystickEventProcessor* processor = new JoystickEventProcessor();
-    processor->registerMQTTClient(mqtt);
-    joystick->registerEventReceiver(processor);
+    Steering* steering = new Steering();
+    steering->registerMQTTClient(mqtt);
+    joystick->registerEventReceiver(steering);
 
     // Infinite event loop
     while (1)
@@ -44,7 +44,7 @@ int main()
         joystick->read();
     }
 
-    delete processor;
+    delete steering;
     delete joystick;
     delete mqtt;
     return 0;
