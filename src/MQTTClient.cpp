@@ -26,7 +26,34 @@ MQTTClient::MQTTClient(
     connected = false;
 
     // Start non-blocking connection attempt to broker
-    connect_async(host, port, keepalive);
+    connect_async(this->host, port, keepalive);
+
+    // Start thread managing connection / publish / subscribe
+    loop_start();
+}
+
+
+MQTTClient::MQTTClient(
+                string id,
+                string topic,
+                string host,
+                int port
+                )
+   :mosquittopp(id.c_str())
+{
+    // Mandatory initialization for mosquitto library
+    mosqpp::lib_init();
+
+    // Basic configuration setup
+    this->keepalive = 60;
+    this->id = id.c_str();
+    this->port = port;
+    this->host = host.c_str();
+    this->topic = topic.c_str();
+    connected = false;
+
+    // Start non-blocking connection attempt to broker
+    connect_async(this->host, port, keepalive);
 
     // Start thread managing connection / publish / subscribe
     loop_start();

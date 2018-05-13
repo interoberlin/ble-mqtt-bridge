@@ -1,5 +1,5 @@
 
-MAIN = main
+MAIN = joystickd
 
 SRCS = $(wildcard src/*.cpp)
 OBJS = $(SRCS:.cpp=.o)

@@ -7,6 +7,7 @@
 #define MQTTCLIENT_HPP
 
 #include <stdint.h>
+#include <string>
 #include <mosquittopp.h>
 
 using namespace std;
@@ -29,6 +30,7 @@ class MQTTClient: public mosqpp::mosquittopp
 
   public:
     MQTTClient(const char* id, const char* topic, const char* host, int port);
+    MQTTClient(string id, string topic, string host, int port);
     ~MQTTClient();
 
     bool sendMessage(char* s, uint8_t length);
