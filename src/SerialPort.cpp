@@ -51,7 +51,7 @@ int SerialPort::Read(void* buf, int length)
 int SerialPort::Write(uint8_t i)
 {
 	char buf[2];
-	sprintf(buf, "%d", i);
+	snprintf(buf, sizeof(buf), "%d", i);
 	Write(&buf, 1);
 	return 1;
 }
@@ -71,5 +71,5 @@ int SerialPort::Write(const void* buf, int len)
 
 void SerialPort::Flush()
 {
-	// flush(fd);
+	fsync(fd);
 }
