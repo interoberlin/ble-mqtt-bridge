@@ -8,6 +8,10 @@ Joystick::Joystick()
    :JoystickEventGenerator()
 {
     fd = -1;
+
+    reader_thread_id = 0;
+    reader_thread_running = false;
+    terminate_reader_thread = false;
 }
 
 
@@ -30,12 +34,20 @@ bool Joystick::open(const char* filename)
 {
     // Open device file for reading
     fd = ::open(filename, O_RDONLY);
-    return (fd >= 0);
+    if (fd >= 0)
+    {
+        startReaderThread();
+        return true;
+    }
+    return false;
 }
 
 
 void Joystick::close()
 {
+    // Stop reading in the other thread
+    stopReaderThread();
+
     // Close device file, if open
     if (isOpen())
     {
@@ -72,3 +84,49 @@ void Joystick::read()
     }
 }
 
+
+static void* joystick_reader_thread(void* argv)
+{
+    // Get this thread's owner object
+    Joystick* joystick = (Joystick*) argv;
+
+    while (!joystick->getReaderThreadTerminationRequested())
+    {
+        joystick->read();
+    }
+
+    return NULL;
+}
+
+
+void Joystick::startReaderThread()
+{
+    if (reader_thread_running)
+    {
+        printf("Reader thread already running with ID %d.\n", (int) reader_thread_id);
+        return;
+    }
+
+    terminate_reader_thread = false;
+    int rc = pthread_create(&reader_thread_id, NULL, &joystick_reader_thread, this);
+    if (rc != 0)
+    {
+        printf("Error: Unable to start reader thread.\n");
+        return;
+    }
+
+    reader_thread_running = true;
+}
+
+
+void Joystick::stopReaderThread()
+{
+    if (!reader_thread_running)
+        return;
+
+    // Signal reader thread to terminate
+    terminate_reader_thread = true;
+
+    // Wait for thread to actually terminate
+    pthread_join(reader_thread_id, NULL);
+}

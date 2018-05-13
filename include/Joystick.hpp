@@ -15,7 +15,8 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <stdlib.h>
-
+#include <thread>
+#include <pthread.h>
 #include "EventGenerator.hpp"
 
 using namespace std;
@@ -27,6 +28,10 @@ class Joystick:
 private:
     /** File descriptor to joystick device file */
     int fd;
+
+    pthread_t reader_thread_id;
+    bool reader_thread_running;
+    bool terminate_reader_thread;
 
 public:
     Joystick();
@@ -52,6 +57,10 @@ public:
      * Attempt to read an event from joystick device
      */
     void read();
+
+    void startReaderThread();
+    void stopReaderThread();
+    bool getReaderThreadTerminationRequested() { return terminate_reader_thread; }
 };
 
 #endif

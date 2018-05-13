@@ -12,7 +12,7 @@ string devicePath = "/dev/input/js0";
 string mqtt_id = "joystick-mqtt-service";
 string mqtt_topic = "joystick/cyborg3d/";
 string mqtt_host = "localhost";
-int mqtt_port = 8833;
+int mqtt_port = 1883;
 
 
 int main()
@@ -39,10 +39,7 @@ int main()
     joystick->registerEventReceiver(steering);
 
     // Infinite event loop
-    while (1)
-    {
-        joystick->read();
-    }
+    pause();
 
     delete steering;
     delete joystick;
