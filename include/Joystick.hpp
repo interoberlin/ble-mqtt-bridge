@@ -16,23 +16,22 @@
 #include <unistd.h>
 #include <stdlib.h>
 
+#include "EventGenerator.hpp"
+
 using namespace std;
 
-#ifndef js_event_t
-typedef struct js_event js_event_t;
-#endif
 
-
-class Joystick
+class Joystick:
+        virtual public JoystickEventGenerator
 {
 private:
     /** File descriptor to joystick device file */
-    int fd = -1;
+    int fd;
 
 public:
-    Joystick() { fd = -1; }
-    Joystick(const char* filename) { open(filename); }
-    ~Joystick() { close(); }
+    Joystick();
+    Joystick(const char* filename);
+    ~Joystick();
 
     /**
      * Open specified joystick device file

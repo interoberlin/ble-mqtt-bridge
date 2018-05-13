@@ -4,6 +4,7 @@
 #include <iostream>
 #include "Joystick.hpp"
 #include "MQTTClient.hpp"
+#include "EventProcessor.hpp"
 
 using namespace std;
 
@@ -16,6 +17,7 @@ int mqtt_port = 8833;
 
 int main()
 {
+    // Create joystick object
     Joystick* joystick = new Joystick();
     if (!joystick->open(devicePath.c_str()))
     {
@@ -23,6 +25,7 @@ int main()
         exit(1);
     }
 
+    // Create MQTT client
     MQTTClient* mqtt = new MQTTClient(
                             mqtt_id,
                             mqtt_topic,
@@ -30,12 +33,19 @@ int main()
                             mqtt_port
                             );
 
+    // Create event processor
+    JoystickEventProcessor* processor = new JoystickEventProcessor();
+    processor->registerMQTTClient(mqtt);
+    joystick->registerEventReceiver(processor);
+
     // Infinite event loop
     while (1)
     {
         joystick->read();
     }
 
+    delete processor;
     delete joystick;
+    delete mqtt;
     return 0;
 }

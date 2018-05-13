@@ -13,7 +13,8 @@
 using namespace std;
 
 
-class MQTTClient: public mosqpp::mosquittopp
+class MQTTClient:
+        public mosqpp::mosquittopp
 {
   private:
     const char* host;
