@@ -12,13 +12,13 @@ public:
 	SerialPort() { };
 	~SerialPort();
 
-	bool Open(const char* = "/dev/ttyUSB0", int nBaud = 9600 );
-	bool Close( void );
+	bool open(const char* = "/dev/ttyUSB0", int nBaud = 9600 );
+	bool close( void );
 
-	int Read( void*, int );
-	int Write( const void*, int );
-	int Write( uint8_t );
-	void Flush();
+	int read( void*, int );
+	int write( const void*, int );
+	int write( uint8_t );
+	void flush();
 
 protected:
 	int fd; // file descriptoy

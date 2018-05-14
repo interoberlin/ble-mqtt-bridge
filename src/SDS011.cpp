@@ -36,13 +36,13 @@ SDS011::SDS011(string device_path)
         delete port;
 
     port = new SerialPort();
-    port->Open(device_path.c_str(), 9600);
+    port->open(device_path.c_str(), 9600);
 }
 
 
 SDS011::~SDS011()
 {
-    port->Close();
+    port->close();
     delete port;
 }
 
@@ -51,7 +51,7 @@ void SDS011::readSerialPort()
 {
     // Read bytes from serial port
     uint8_t buf[42];
-    int count = port->Read(buf, sizeof(buf));
+    int count = port->read(buf, sizeof(buf));
 
     // Push them to our local queue
     for (uint8_t i=0; i<count; i++)
@@ -171,15 +171,15 @@ void SDS011::sleep()
 {
     for (uint8_t i = 0; i < 19; i++)
     {
-        port->Write(SLEEPCMD[i]);
+        port->write(SLEEPCMD[i]);
     }
-    port->Flush();
+    port->flush();
 }
 
 
 void SDS011::wakeup()
 {
-    port->Write(0x01);
-    port->Flush();
+    port->write(0x01);
+    port->flush();
 }
 

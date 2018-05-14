@@ -34,7 +34,7 @@ int main( int argc, char* argv[] )
     while ((option_char = getopt (argc, argv, "D:d:p:h:")) != EOF) {
         switch (option_char) {
             case 'D': {
-                snprintf(device_name, sizeof(device_name), "%s", optarg,);
+                snprintf(device_name, sizeof(device_name), "%s", optarg);
             } break;
             case 'd': {
                 end = 0;
@@ -112,7 +112,7 @@ int main( int argc, char* argv[] )
 		if (sensor->read(&p25, &p10, &id))
 		{
             if (debug_flag > DEBUG_NORMAL) {
-                 cout << "Sensor " << id << ": PM2.5=" << p25 << << " PM10=" << p10 << endl << flush;
+                 cout << "Sensor " << id << ": PM2.5=" << p25 << " PM10=" << p10 << endl << flush;
             }
             mqtt10->sendFloat(&p10);
             this_thread::sleep_for(0.5s);

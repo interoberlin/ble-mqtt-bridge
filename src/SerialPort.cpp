@@ -8,13 +8,13 @@
 
 SerialPort::~SerialPort()
 {
-	close(fd);
+	::close(fd);
 }
 
-bool SerialPort::Open(const char* device, int nBaud )
+bool SerialPort::open(const char* device, int nBaud )
 {
 
-	fd = open(device, O_RDWR | O_NOCTTY | O_NDELAY);
+	fd = ::open(device, O_RDWR | O_NOCTTY | O_NDELAY);
 
 	if (fd == -1 )	{
 		perror("open_port: Unable to open /dev/ttyS0 – ");
@@ -31,16 +31,16 @@ bool SerialPort::Open(const char* device, int nBaud )
 	return true;
 }
 
-bool SerialPort::Close( void )
+bool SerialPort::close( void )
 {
-	close(fd);
+	::close(fd);
 	return true;
 }
 
-int SerialPort::Read(void* buf, int length)
+int SerialPort::read(void* buf, int length)
 {
 	int rd;
-	rd = read(fd, buf, length);
+	rd = ::read(fd, buf, length);
 	if (rd < 0 ) {
 		perror("read: unable to read – ");
 		return -1;
@@ -48,18 +48,18 @@ int SerialPort::Read(void* buf, int length)
 	return rd;
 }
 
-int SerialPort::Write(uint8_t i)
+int SerialPort::write(uint8_t i)
 {
 	char buf[2];
 	snprintf(buf, sizeof(buf), "%d", i);
-	Write(&buf, 1);
+	write(&buf, 1);
 	return 1;
 }
 
-int SerialPort::Write(const void* buf, int len)
+int SerialPort::write(const void* buf, int len)
 {
 	int wr;
-	wr = write( fd, buf,len );
+	wr = ::write( fd, buf,len );
 
 	if (wr < 0 ) {
 		perror("write: unable to write – ");
@@ -69,7 +69,7 @@ int SerialPort::Write(const void* buf, int len)
 	return wr;
 }
 
-void SerialPort::Flush()
+void SerialPort::flush()
 {
-	fsync(fd);
+	::fsync(fd);
 }
