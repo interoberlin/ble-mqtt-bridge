@@ -11,6 +11,7 @@
 #include <getopt.h>
 #include <stdlib.h>
 #include <Bridge.hpp>
+#include <tinyb/BluetoothException.hpp>
 #include "debug.h"
 
 #include <nlohmann/json.hpp>
@@ -93,6 +94,7 @@ void bridge_floorsensor(json config)
             }
 
             if ( !config_check_flag ) {
+     
                 Bridge* bridge = new Bridge(
                                         bridge_config.mqttClientName.c_str(),
                                         bridge_config.mqttTopic.c_str(),
@@ -104,10 +106,19 @@ void bridge_floorsensor(json config)
                                         bridge_config.bleCharacteristic
                                     );
                 bridges.push_back(bridge);
+     
             } // config_check_flag
 
-        } catch (exception& e) {
+            usleep(100);
+            
+        } catch (tinyb::BluetoothException& bte) {
+     
+            cerr << "could not connect to " << bridge_config.bleAddress << " : ignoring it. Reason was " << bte.what() << endl;
+     
+         } catch (exception& e) {
+     
             cerr << e.what();
+     
         }
 
     } // beacon
