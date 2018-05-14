@@ -44,7 +44,7 @@ void bridge_floorsensor(json config)
         std::string mqttTopic;
         std::string mqttHost;
         int mqttPort;
-        BLEClientRole::role_enum bleClienRole;
+        BLEClientRole::role_enum bleClientRole;
         std::string bleAddress;
         std::string bleOwner;
         std::string bleLocation;
@@ -57,7 +57,7 @@ void bridge_floorsensor(json config)
     bridge_config.mqttHost = "localhost";
     bridge_config.mqttPort = 1883;
 
-    bridge_config.bleClienRole = BLEClientRole::READER;
+    bridge_config.bleClientRole = BLEClientRole::READER;
     bridge_config.bleService = FLOORSENSOR_UUID_SERVICE;
     bridge_config.bleCharacteristic = FLOORSENSOR_UUID_CHARACTERISTIC3;
 
@@ -79,7 +79,8 @@ void bridge_floorsensor(json config)
 
         for (uint sensor = 0; sensor < config["beacons"][beacon]["sensors"].size(); sensor++) {
 
-           bridge_config.mqttTopic = config["beacons"][beacon]["sensors"][sensor]["topic"];
+           bridge_config.mqttTopic = "floorsensor/"; 
+           bridge_config.mqttTopic += config["beacons"][beacon]["sensors"][sensor]["checkerboardId"];
 
            if ( debug_flag > DEBUG_MORE ) {
                 cout << "    " << sensor << ": [" << bridge_config.mqttTopic << "]" << endl << flush;
@@ -97,7 +98,7 @@ void bridge_floorsensor(json config)
                                         bridge_config.mqttTopic.c_str(),
                                         bridge_config.mqttHost.c_str(),
                                         bridge_config.mqttPort,
-                                        bridge_config.bleClienRole,
+                                        bridge_config.bleClientRole,
                                         bridge_config.bleAddress,
                                         bridge_config.bleService,
                                         bridge_config.bleCharacteristic
