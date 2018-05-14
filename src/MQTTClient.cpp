@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string.h>
 
+#include "debug.h"
 
 MQTTClient::MQTTClient(
                 const char* id,
@@ -67,12 +68,14 @@ void MQTTClient::on_connect(int rc)
 {
     if (rc == 0)
     {
-        cout << ">> Connected to MQTT broker" << endl;
+        if (debug_flag > DEBUG_NONE) {
+            cout << ">> Connected to MQTT broker" << endl;  
+        } 
         connected = true;
     }
     else
     {
-        cout << ">> Unable to connect to MQTT broker (return code " << rc << ")" << endl;
+        cerr << ">> Unable to connect to MQTT broker (return code " << rc << ")" << endl;
         connected = false;
     }
 }
@@ -80,20 +83,26 @@ void MQTTClient::on_connect(int rc)
 
 void MQTTClient::on_disconnect(int rc)
 {
-    cout << ">> MQTT broker disconnected (" << rc << ")" << endl;
+    if (debug_flag > DEBUG_MORE) {
+        cout << ">> MQTT broker disconnected (" << rc << ")" << endl;
+    }
     connected = false;
 }
 
 
 void MQTTClient::on_publish(int mid)
 {
-    cout << ">> MQTT message published (" << mid << ")" << endl;
+    // if (debug_flag > DEBUG_NONE) {
+        cout << ">> MQTT message published (" << mid << ")" << endl;
+    // } 
 }
 
 
 void MQTTClient::on_message(const struct mosquitto_message* message)
 {
-    cout << ">> MQTT message received" << endl;
+    if (debug_flag > DEBUG_NONE) {
+        cout << ">> MQTT message received" << endl;
+    }
 
     if (ble_client == NULL)
         // Not BLE device connected

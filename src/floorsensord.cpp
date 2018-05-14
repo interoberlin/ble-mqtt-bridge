@@ -11,6 +11,7 @@
 #include <getopt.h>
 #include <stdlib.h>
 #include <Bridge.hpp>
+#include "debug.h"
 
 #include <nlohmann/json.hpp>
 
@@ -29,9 +30,8 @@ using namespace std::chrono_literals;
 #define FLOORSENSOR_UUID_CHARACTERISTIC3    "00002014-0000-1000-8000-00805f9b34fb"
 
 // command line option global vars
-bool config_check_flag = false;
-typedef enum { DEBUG_NONE=0, DEBUG_NORMAL, DEBUG_MORE, DEBUG_MOST, DEBUG_ALL=9} debug_flags;
 debug_flags debug_flag = DEBUG_NONE;
+bool config_check_flag = false;
 
 vector<Bridge*> bridges;
 
@@ -74,7 +74,7 @@ void bridge_floorsensor(json config)
         if ( debug_flag > DEBUG_MORE ) {
             cout << " " << beacon << ": [" << bridge_config.bleAddress << "]"
                  << " " << "[" << bridge_config.bleOwner << "]"
-                 << " " << "[" << bridge_config.bleLocation << "]"             << endl << flush;
+                 << " " << "[" << bridge_config.bleLocation << "]"  << endl << flush;
         }
 
         for (uint sensor = 0; sensor < config["beacons"][beacon]["sensors"].size(); sensor++) {
@@ -113,6 +113,10 @@ void bridge_floorsensor(json config)
 
 }
 
+char* end_p = NULL;
+long temp_val;
+
+
 int main(int argc, char* argv[])
 {
     json floorsensor_config;
@@ -122,9 +126,14 @@ int main(int argc, char* argv[])
 
     while ((option_char = getopt (argc, argv, "cd:f:?")) != EOF) {
         switch (option_char) {
-            case 'd': 
-                debug_flag = (debug_flags) atoi(optarg); 
-                break;
+            case 'd': {
+                end_p = NULL;
+                errno = 0;
+                temp_val = strtol(optarg, &end_p, 10);
+                if (end_p != optarg && errno != ERANGE && temp_val >= DEBUG_NONE && temp_val <= DEBUG_ALL) {
+                    debug_flag = (debug_flags) temp_val;
+                }
+            } break;
             case 'c': 
                 config_check_flag = true; 
                 debug_flag = DEBUG_ALL; 
@@ -156,5 +165,4 @@ int main(int argc, char* argv[])
             delete *it;
         }
     } // config_check_flag
-
 }
