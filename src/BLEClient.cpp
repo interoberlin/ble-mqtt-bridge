@@ -2,6 +2,7 @@
 #include <MQTTClient.hpp>
 #include <iostream>
 
+#include "debug.h"
 
 BLEClient::BLEClient(
             BLEClientRole::role_enum role,
@@ -62,7 +63,9 @@ static void* bleclient_connection_thread(void* argv)
 
             if (!ble_client->manager->get_discovering())
             {
-                cout << ">> Starting to scan for BLE devices..." << endl << flush;
+                if (debug_flag > DEBUG_MORE) {
+                    cout  << ">> Starting to scan for BLE devices..." << endl << flush;
+                }
                 ble_client->manager->start_discovery();
             }
             else
@@ -73,7 +76,9 @@ static void* bleclient_connection_thread(void* argv)
                 {
                     if ((*it)->get_address() == ble_client->device_address)
                     {
-                        cout << ">> Found requested beacon in list of known devices" << endl << flush;
+                        if (debug_flag > DEBUG_NONE) {
+                            cout << ">> Found requested beacon in list of known devices" << endl << flush;
+                        }
                         ble_client->device = (*it).release();
                         break;
                     }
@@ -86,7 +91,9 @@ static void* bleclient_connection_thread(void* argv)
             if (!ble_client->device->get_connected())
             {
                 was_previously_connected = false;
-                cout << ">> Connecting..." << endl << flush;
+                if (debug_flag > DEBUG_NONE) {
+                    cout << ">> Connecting..." << endl << flush;
+                }
 
                 ble_client->manager->stop_discovery();
                 ble_client->device->disconnect();
@@ -96,7 +103,9 @@ static void* bleclient_connection_thread(void* argv)
             {
                 if (was_previously_connected)
                 {
-                    cout << ">> Still connected to beacon." << endl << flush;
+                    if (debug_flag > DEBUG_NONE) {
+                        cout << ">> Still connected to beacon." << endl << flush;
+                    }
                 }
                 else
                 {
@@ -217,7 +226,9 @@ static void* bleclient_reader_thread(void* argv)
     {
         if (ble_client->characteristic != NULL)
         {
-            cout << ">> Reading data from BLE beacon..." << endl << flush;
+            if (debug_flag > DEBUG_MORE) {
+                cout << ">> Reading data from BLE beacon..." << endl << flush;
+            }
 
             vector<uint8_t> data = ble_client->characteristic->read_value(0);
 
@@ -237,7 +248,7 @@ static void* bleclient_reader_thread(void* argv)
         this_thread::sleep_for(ble_client->getReadInterval());
     }
 
-    cout << ">> BLE reader thread terminated." << endl << flush;
+    cerr << ">> BLE reader thread terminated." << endl;
 
     // Thread terminates
     return NULL;
