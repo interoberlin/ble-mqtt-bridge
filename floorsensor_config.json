@@ -19,6 +19,24 @@
       ]
     },
     {
+      "address": "C2:CE:B6:BC:D7:5B",
+      "owner": "Matthias",
+      "sensors": [
+        {
+          "id": 0,
+          "topic": "floorsensor/M1/",
+          "checkerboardid": "M1",
+          "index": "00"
+        },
+        {
+          "id": 1,
+          "topic": "floorsensor/M2/",
+          "checkerboardid": "M2",
+          "index": "01"
+        }
+      ]
+    },
+    {
       "address": "F6:56:9D:78:F0:2E",
       "owner": "Goetz",
       "sensors": [
