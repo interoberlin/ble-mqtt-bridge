@@ -33,6 +33,21 @@ MQTTClient::MQTTClient(
 }
 
 
+MQTTClient::MQTTClient(
+                string id,
+                string topic,
+                string host,
+                int port
+                )
+   :MQTTClient(
+           id.c_str(),
+           topic.c_str(),
+           host.c_str(),
+           port
+           )
+{}
+
+
 MQTTClient::~MQTTClient()
 {
     // Kill the thread
