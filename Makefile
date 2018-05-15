@@ -45,4 +45,4 @@ $(TARGET2): $(OBJS2)
 	$(CPP) $(CPPFLAGS) -c $^ -o $@
 
 clean:
-	rm -f $(OBJS) $(ELF)
+	rm -f $(TARGET1) $(OBJS1) $(TARGET2) $(OBJS2)
