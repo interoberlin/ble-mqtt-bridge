@@ -1,6 +1,7 @@
 
-MAIN = floorsensord
-
+#
+# Toolchain
+#
 CC = gcc
 CPP = g++
 
@@ -13,18 +14,31 @@ LDFLAGS += -ltinyb
 LDFLAGS += -lpthread
 LDFLAGS += -lmosquittopp
 
-#SRCS = $(wildcard src/*.cpp)
-SRCS = src/floorsensord.cpp src/MQTTClient.cpp src/BLEClient.cpp src/Bridge.cpp
-OBJS = $(SRCS:.cpp=.o)
-ELF = $(MAIN).elf
+#
+# Source files
+#
+COMMON_SRCS = $(wildcard src/endpoints/*.cpp src/events/*.cpp)
 
+TARGET1 = floorsensord
+SRCS1 = $(COMMON_SRCS) $(wildcard src/floorsensord/*.cpp)
+OBJS1 = $(SRCS1:.cpp=.o)
 
-all: $(ELF)
+TARGET2 = alarmlightd
+SRCS2 = $(COMMON_SRCS) $(wildcard src/alarmlightd/*.cpp)
+OBJS2 = $(SRCS2:.cpp=.o)
 
-run: $(ELF)
+#
+# make targets
+#
+all: $(TARGET1) $(TARGET2)
+
+run: $(TARGET1)
 	./$<
 
-$(ELF): $(OBJS)
+$(TARGET1): $(OBJS1)
+	$(CPP) $^ $(CPPFLAGS) $(LDFLAGS) -o $@
+
+$(TARGET2): $(OBJS2)
 	$(CPP) $^ $(CPPFLAGS) $(LDFLAGS) -o $@
 
 %.o: %.cpp
