@@ -8,18 +8,24 @@
 
 #include <stdint.h>
 #include <mosquittopp.h>
+#include "events/Event.hpp"
+#include "events/EventGenerator.hpp"
+#include "events/EventReceiver.hpp"
 
 using namespace std;
 
-class BLEClient;
 
 
-class MQTTClient: public mosqpp::mosquittopp
+class MQTTClient:
+        virtual public EventGenerator,
+        virtual public EventReceiver,
+        public mosqpp::mosquittopp
 {
   private:
     const char* host;
     const char* id;
     const char* topic;
+    const char* defaultTopic;
     int port;
     int keepalive;
     bool connected = false;
@@ -29,16 +35,25 @@ class MQTTClient: public mosqpp::mosquittopp
     void on_publish(int mid);
     void on_message(const struct mosquitto_message* message);
 
-    BLEClient* ble_client = NULL;
-
   public:
     MQTTClient(const char* id, const char* topic, const char* host, int port);
     MQTTClient(string id, string topic, string host, int port);
     ~MQTTClient();
 
-    bool send_message(char* s, uint8_t length);
+    /** Update topic for next call to sendMessage() */
+    void setTopic(string s);
 
-    void registerOnMessageEventReceiver(BLEClient* ble) { ble_client = ble; };
+    bool sendMessage(char* msg, uint8_t length);
+    bool sendMessage(string msg);
+
+    /**
+     * Treat the configured topic as parent path,
+     * append a "/" and publish to the specified subtopic
+     */
+    bool sendMessage(char* subtopic, char* msg, uint8_t length);
+    bool sendMessage(string subtopic, string msg);
+
+    void event(event_t*);
 };
 
 

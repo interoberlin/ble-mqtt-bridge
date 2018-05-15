@@ -1,5 +1,5 @@
-#include <BLEClient.hpp>
-#include <MQTTClient.hpp>
+
+#include "endpoints/BLEClient.hpp"
 #include <iostream>
 
 
@@ -9,6 +9,8 @@ BLEClient::BLEClient(
             string service,
             string characteristic
             )
+    :EventGenerator(),
+     EventReceiver()
 {
     this->role = role;
     device_address = address;
@@ -26,7 +28,6 @@ BLEClient::BLEClient(
     reader_thread_running = false;
     reader_thread_id = 0;
     read_interval = 1s;
-    mqtt_client = NULL;
 
     // Only in the reader role there is need for a reader thread
     if (role == BLEClientRole::READER)
@@ -221,17 +222,19 @@ static void* bleclient_reader_thread(void* argv)
 
             vector<uint8_t> data = ble_client->characteristic->read_value(0);
 
-            MQTTClient* mqtt_client = ble_client->getReadEventReceiver();
-            if (mqtt_client != NULL)
+            // If no one is listening, simply discard the data
+            if (!ble_client->hasEventReceiver())
+                continue;
+
+            // Create an event!
+            event_t e;
+            e.source = EventSource::BLE;
+            e.bleDataLength = min(data.size(), sizeof(e.bleData));
+            for (uint8_t i=0; i<e.bleDataLength; i++)
             {
-                uint8_t length = data.size();
-                char s[length];
-                for (uint8_t i=0; i<length; i++)
-                {
-                    s[i] = data[i];
-                }
-                mqtt_client->send_message(s, length);
+                e.bleData[i] = data[i];
             }
+            ble_client->getEventReceiver()->event(&e);
         }
 
         this_thread::sleep_for(ble_client->getReadInterval());
