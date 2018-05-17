@@ -1,5 +1,7 @@
 #include <BLEClient.hpp>
 #include <MQTTClient.hpp>
+#include <tinyb/BluetoothException.hpp>
+#include <unistd.h>
 #include <iostream>
 
 #include "debug.h"
@@ -66,7 +68,16 @@ static void* bleclient_connection_thread(void* argv)
                 if (debug_flag > DEBUG_MORE) {
                     cout  << ">> Starting to scan for BLE devices..." << endl << flush;
                 }
-                ble_client->manager->start_discovery();
+                bool connection_attempt_done = false;
+                while (!connection_attempt_done) {
+                    try {
+                        ble_client->manager->start_discovery();
+                        connection_attempt_done = true;
+                    } catch (tinyb::BluetoothException& bte) {
+                        cerr << "wait for connection ..." << endl;
+                        usleep(5000);
+                    }
+                }
             }
             else
             {
