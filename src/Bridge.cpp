@@ -3,9 +3,9 @@
 
 
 Bridge::Bridge(
-            const char* mqttClientName,
-            const char* mqttTopic,
-            const char* mqttHost,
+            string mqttClientName,
+            string mqttTopic,
+            string mqttHost,
             int mqttPort,
             BLEClientRole::role_enum bleClientRole,
             string bleAddress,

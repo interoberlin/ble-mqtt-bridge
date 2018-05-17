@@ -6,6 +6,7 @@
 #ifndef MQTTCLIENT_HPP
 #define MQTTCLIENT_HPP
 
+#include <string>
 #include <stdint.h>
 #include <mosquittopp.h>
 
@@ -17,9 +18,9 @@ class BLEClient;
 class MQTTClient: public mosqpp::mosquittopp
 {
   private:
-    const char* host;
-    const char* id;
-    const char* topic;
+    string host;
+    string id;
+    string topic;
     int port;
     int keepalive;
     bool connected = false;
@@ -32,10 +33,10 @@ class MQTTClient: public mosqpp::mosquittopp
     BLEClient* ble_client = NULL;
 
   public:
-    MQTTClient(const char* id, const char* topic, const char* host, int port);
+    MQTTClient(string id, string topic, string host, int port);
     ~MQTTClient();
 
-    bool send_message(char* s, uint8_t length);
+    bool send_message(string s, uint8_t length);
 
     void registerOnMessageEventReceiver(BLEClient* ble) { ble_client = ble; };
 };

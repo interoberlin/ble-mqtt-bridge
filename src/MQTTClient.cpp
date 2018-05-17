@@ -2,17 +2,17 @@
 #include <MQTTClient.hpp>
 #include <BLEClient.hpp>
 #include <iostream>
-#include <string.h>
+#include <string>
 
 #include "debug.h"
 
 MQTTClient::MQTTClient(
-                const char* id,
-                const char* topic,
-                const char* host,
+                string id,
+                string topic,
+                string host,
                 int port
                 )
-   :mosquittopp(id)
+   :mosquittopp(id.c_str())
 {
     // Mandatory initialization for mosquitto library
     mosqpp::lib_init();
@@ -26,7 +26,7 @@ MQTTClient::MQTTClient(
     connected = false;
 
     // Start non-blocking connection attempt to broker
-    connect_async(host, port, keepalive);
+    connect_async(host.c_str(), port, keepalive);
 
     // Start thread managing connection / publish / subscribe
     loop_start();
@@ -43,7 +43,7 @@ MQTTClient::~MQTTClient()
 }
 
 
-bool MQTTClient::send_message(char* s, uint8_t length)
+bool MQTTClient::send_message(string s, uint8_t length)
 {
     if (!connected)
     {
@@ -59,7 +59,9 @@ bool MQTTClient::send_message(char* s, uint8_t length)
     // * qos (0,1,2)
     // * retain (boolean) - indicates if message is retained on broker or not
     // Should return MOSQ_ERR_SUCCESS
-    int ret = publish(NULL, this->topic, length, s, 1, false);
+    int ret = publish(NULL, this->topic.c_str(), length, s.c_str(), 1, false);
+    cout << ">> wrote to topic " << this->topic << " ret: " << ret << endl;  
+
     return (ret == MOSQ_ERR_SUCCESS);
 }
 
