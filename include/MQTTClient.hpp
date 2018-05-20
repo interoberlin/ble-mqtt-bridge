@@ -34,8 +34,8 @@ class MQTTClient:
     MQTTClient(string id, string topic, string host, int port);
     ~MQTTClient();
 
-    bool sendMessage(char* s, uint8_t length);
-    bool sendFloat(float* f);
+    bool sendMessage(string message, string subtopic = "");
+    bool sendFloat(float* f, string subtopic = "");
 };
 
 

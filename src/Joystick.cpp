@@ -62,7 +62,7 @@ void Joystick::read()
     // Attempt to read a joystick event from the device file
     js_event_t e;
     ::read(fd, &e, sizeof(e));
-    printf("%d %d %d %d\n", e.time, e.value, e.type, e.number);
+    // printf("%d %d %d %d\n", e.time, e.value, e.type, e.number);
 
     // Without event receiver, event evaluation can be skipped.
     if (!hasEventReceiver())
@@ -82,6 +82,7 @@ void Joystick::read()
 //            printf( "Init Events\n" );
             break;
     }
+
 }
 
 

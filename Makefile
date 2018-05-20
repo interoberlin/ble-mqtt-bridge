@@ -22,7 +22,7 @@ run: $(MAIN)
 	./$^
 
 $(MAIN): $(OBJS)
-	$(CPP) $(LDFLAGS) -o $@ $^
+	$(CPP) -o $@ $^ $(LDFLAGS) 
 
 %.o: %.cpp
 	$(CPP) $(CPPFLAGS) -c $^ -o $@

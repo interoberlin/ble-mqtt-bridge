@@ -73,9 +73,9 @@ int main(int argc, char** argv)
 
     // Create MQTT client
     MQTTClient* mqtt = new MQTTClient(
-                            mqtt_id,
-                            mqtt_topic,
-                            mqtt_host,
+                            mqtt_id.c_str(),
+                            mqtt_topic.c_str(),
+                            mqtt_host.c_str(),
                             mqtt_port
                             );
 

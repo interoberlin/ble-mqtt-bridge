@@ -52,6 +52,7 @@ MQTTClient::MQTTClient(
     this->topic = topic.c_str();
     connected = false;
 
+    printf("connected to mqtt %s with topic %s\n", this->host, this->topic);
     // Start non-blocking connection attempt to broker
     connect_async(this->host, port, keepalive);
 
@@ -70,11 +71,17 @@ MQTTClient::~MQTTClient()
 }
 
 
-bool MQTTClient::sendMessage(char* s, uint8_t length)
+bool MQTTClient::sendMessage(string message, string subtopic  /* = "" */) 
 {
     if (!connected)
     {
         return false;
+    }
+    
+    string topic = this->topic;
+    
+    if (subtopic.length()) {
+        topic = topic + "/" + subtopic;
     }
 
     // Send message - depending on QoS, mosquitto lib managed re-submission this the thread
@@ -86,18 +93,16 @@ bool MQTTClient::sendMessage(char* s, uint8_t length)
     // * qos (0,1,2)
     // * retain (boolean) - indicates if message is retained on broker or not
     // Should return MOSQ_ERR_SUCCESS
-    int ret = publish(NULL, this->topic, length, s, 1, false);
+    int ret = publish(NULL, topic.c_str(), message.length(), message.c_str(), 1, false);
+    cout << "mqtt send " << message << " done: " << topic << " " <<  ret;
     return (ret == MOSQ_ERR_SUCCESS);
+
 }
 
-
-bool MQTTClient::sendFloat(float* f)
+bool MQTTClient::sendFloat(float* f, string subtopic /* = "" */ )
 {
-    char s[30];
-    snprintf(s, 30, "%0.01f", *f);
-    return sendMessage(s, strlen(s));
+    return sendMessage(to_string(*f), subtopic);
 }
-
 
 void MQTTClient::on_connect(int rc)
 {

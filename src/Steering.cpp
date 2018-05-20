@@ -1,4 +1,5 @@
 
+#include <iostream>
 #include "Steering.hpp"
 
 
@@ -8,8 +9,8 @@ void Steering::eventButton(js_event_t* e)
         return;
 
     string s = "Button";
-    char* c = (char*) s.c_str();
-    mqtt->sendMessage(c, s.length());
+
+    mqtt->sendMessage(s);
 }
 
 
@@ -18,7 +19,17 @@ void Steering::eventAxis(js_event_t* e)
     if (mqtt == NULL)
         return;
 
-    string s = "Axis";
-    char* c = (char*) s.c_str();
-    mqtt->sendMessage(c, s.length());
+    // cerr << lasttime << "/" << e->time << " ";
+    if ((lasttime+200) < e->time) {
+        lasttime = e->time;
+        return;
+    }
+
+    string message;
+    string subtopic;
+    subtopic = to_string(e->number);
+    message = to_string(e->value);
+    
+    
+    mqtt->sendMessage(message, subtopic);
 }
