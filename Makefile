@@ -17,20 +17,19 @@ LDFLAGS += -lmosquittopp
 #
 # Source files
 #
-COMMON_SRCS = $(wildcard src/endpoints/*.cpp src/events/*.cpp)
-
+COMMON_SRCS = src/BLEClient.cpp src/MQTTClient.cpp src/Bridge.cpp
 TARGET1 = floorsensord
-SRCS1 = $(COMMON_SRCS) $(wildcard src/floorsensord/*.cpp)
+SRCS1 = $(COMMON_SRCS) src/floorsensord.cpp
 OBJS1 = $(SRCS1:.cpp=.o)
 
-TARGET2 = alarmlightd
-SRCS2 = $(COMMON_SRCS) $(wildcard src/alarmlightd/*.cpp)
+TARGET2 = robbyd
+SRCS2 = $(COMMON_SRCS) src/robbyd.cpp
 OBJS2 = $(SRCS2:.cpp=.o)
 
 #
 # make targets
 #
-all: $(TARGET1) $(TARGET2)
+all: $(TARGET1) $(TARGET2) $(TARGET3)
 
 run: $(TARGET1)
 	./$<
