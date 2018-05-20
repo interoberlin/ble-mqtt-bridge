@@ -1,6 +1,7 @@
 
+// #include <stdio.h>
+#include <iostream>
 #include "Joystick.hpp"
-#include <stdio.h>
 
 
 Joystick::Joystick()
@@ -71,11 +72,11 @@ void Joystick::read()
     switch (e.type)
     {
         case JS_EVENT_BUTTON:
-            printf("button#%d value:%d\n", (int) e.number, e.value);
+            // printf("button#%d value:%d\n", (int) e.number, e.value);
             eventReceiver->eventButton(&e);
             break;
         case JS_EVENT_AXIS:
-            printf("axis#%d value:%d\n", (int) e.number, e.value);
+            // printf("axis#%d value:%d\n", (int) e.number, e.value);
             eventReceiver->eventAxis(&e);
             break;
         default:
@@ -104,7 +105,7 @@ void Joystick::startReaderThread()
 {
     if (reader_thread_running)
     {
-        printf("Reader thread already running with ID %d.\n", (int) reader_thread_id);
+        cerr << "Reader thread already running with ID " << reader_thread_id << endl;
         return;
     }
 
@@ -112,7 +113,7 @@ void Joystick::startReaderThread()
     int rc = pthread_create(&reader_thread_id, NULL, &joystick_reader_thread, this);
     if (rc != 0)
     {
-        printf("Error: Unable to start reader thread.\n");
+        cerr << "Error: Unable to start reader thread.\n";
         return;
     }
 

@@ -11,7 +11,7 @@ using namespace std;
 
 string devicePath = "/dev/input/js0";
 string mqtt_id = "joystick-mqtt-service";
-string mqtt_topic = "joystick/cyborg3d/";
+string mqtt_topic = "joystick/cyborg3d";
 string mqtt_host = "localhost";
 int mqtt_port = 1883;
 bool daemonize = false;
