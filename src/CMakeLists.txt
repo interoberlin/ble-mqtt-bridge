@@ -6,3 +6,4 @@ add_subdirectory(endpoints)
 
 # define binaries
 add_subdirectory(floorsensord)
+# add_subdirectory(alarmlightd)
