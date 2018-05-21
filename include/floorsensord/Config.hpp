@@ -36,6 +36,21 @@ namespace floorsensord
     private:
         json config;
 
+        struct bridge_t {
+            std::string mqttClientName;
+            std::string mqttTopic;
+            std::string mqttHost;
+            int mqttPort;
+            BLEClientRole::role_enum bleClienRole;
+            std::string bleAddress;
+            std::string bleOwner;
+            std::string bleLocation;
+            std::string bleService;
+            std::string bleCharacteristic;
+        } bridge_config;
+
+
+
     public:
         /**
          * Import configuration from JSON formatted file

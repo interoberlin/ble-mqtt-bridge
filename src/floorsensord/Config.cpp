@@ -1,5 +1,6 @@
 
 #include "floorsensord/Config.hpp"
+#include "debug.h"
 #include <iostream>
 
 using namespace floorsensord;
@@ -30,7 +31,31 @@ bool Config::importJSON(string filename)
 
 void Config::printCheck()
 {
-    // TODO
+    for (uint beacon = 0; beacon < config["beacons"].size(); beacon++) {
+
+        bridge_config.bleAddress = config["beacons"][beacon]["address"];
+        bridge_config.bleOwner   = config["beacons"][beacon]["owner"];
+        bridge_config.bleLocation= \
+                config["beacons"][beacon]["location"].empty()?\
+                "NotDefined":\
+                config["beacons"][beacon]["location"];
+
+        if ( debug_flag > DEBUG_MORE ) {
+            cout << " " << beacon << ": [" << bridge_config.bleAddress << "]"
+                 << " " << "[" << bridge_config.bleOwner << "]"
+                 << " " << "[" << bridge_config.bleLocation << "]"  << endl << flush;
+        }
+
+        for (uint sensor = 0; sensor < config["beacons"][beacon]["sensors"].size(); sensor++) {
+
+           bridge_config.mqttTopic = config["beacons"][beacon]["sensors"][sensor]["topic"];
+
+           if ( debug_flag > DEBUG_MORE ) {
+                cout << "    " << sensor << ": [" << bridge_config.mqttTopic << "]" << endl << flush;
+           }
+        } // sensor
+    }
+
 }
 
 
