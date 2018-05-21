@@ -15,6 +15,10 @@
 .settings
 .metadata
 
+# Binaries
+robbyd
+floorsensord
+
 
 .vscode/c_cpp_properties.json
 .vscode/tasks.json
