@@ -21,7 +21,7 @@ using namespace std::chrono_literals;
 #define ROBBY_BEACON_ADDRESS           "78:A5:04:80:9D:EC"
 #define ROBBY_UUID_SERVICE             "0000ffe0-0000-1000-8000-00805f9b34fb"
 #define ROBBY_UUID_CHARACTERISTIC      "0000ffe1-0000-1000-8000-00805f9b34fb"
-
+#define ROBBY_TOPIC_ALL                "joystick/cyborg3d/#"
 
 MQTTClient* mqtt_client = NULL;
 BLEClient* ble_client = NULL;
@@ -31,7 +31,7 @@ void bridge_robby()
 {
     mqtt_client = new MQTTClient(
                             "robby-daemon",
-                            "joystick/cyborg3d/",
+                            ROBBY_TOPIC_ALL,
                             "localhost",
                             1883
                             );
@@ -42,6 +42,8 @@ void bridge_robby()
                             ROBBY_UUID_SERVICE,
                             ROBBY_UUID_CHARACTERISTIC
                             );
+    mqtt_client->subscribe(NULL, ROBBY_TOPIC_ALL, 0);
+    mqtt_client->registerOnMessageEventReceiver(ble_client);
 }
 
 

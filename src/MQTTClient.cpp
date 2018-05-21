@@ -3,8 +3,17 @@
 #include <BLEClient.hpp>
 #include <iostream>
 #include <string.h>
+#include <stdlib.h>
 
 #include "debug.h"
+
+// shall I write the message to the BLEClient
+#define with_ble 0
+
+#define ROBBY_TOPIC_STEER              "joystick/cyborg3d/1"
+#define ROBBY_TOPIC_DRIVE              "joystick/cyborg3d/0"
+#define ROBBY_STEER_THRESHOLD           999
+#define ROBBY_DRIVE_THRESHOLD           999
 
 MQTTClient::MQTTClient(
                 const char* id,
@@ -25,6 +34,9 @@ MQTTClient::MQTTClient(
     this->topic = topic;
     connected = false;
 
+    if (debug_flag > DEBUG_MORE) {
+        cerr << "MQTT connect to " << this->topic << endl;
+    }    
     // Start non-blocking connection attempt to broker
     connect_async(host, port, keepalive);
 
@@ -104,9 +116,11 @@ void MQTTClient::on_message(const struct mosquitto_message* message)
         cout << ">> MQTT message received" << endl;
     }
 
+#if with_ble
     if (ble_client == NULL)
         // Not BLE device connected
         return;
+#endif
 
     // Don't forward empty messages
     if (message->payloadlen == 0)
@@ -114,12 +128,35 @@ void MQTTClient::on_message(const struct mosquitto_message* message)
 
     // Convert message payload to vector
     vector<uint8_t> v;
-    for (uint8_t i=0; i<message->payloadlen; i++)
-    {
-        v.push_back(((uint8_t*) message->payload)[i]);
+    char cmd = '0';
+    if (strcmp(message->topic, ROBBY_TOPIC_DRIVE)) { // drive
+        int payload = atoi((char*) message->payload);
+        if (payload > ROBBY_DRIVE_THRESHOLD) {
+            cmd = 'F';
+        } else if (payload < -ROBBY_DRIVE_THRESHOLD) {
+            cmd = 'B';
+        } else {
+            cmd = 'S';
+        } 
     }
-
-    // Output generated vector via BLE
+    
+    if (strcmp(message->topic, ROBBY_TOPIC_STEER)) { // steer
+        int payload = atoi((char*)message->payload);
+        if (payload > ROBBY_STEER_THRESHOLD) {
+            cmd = 'R';
+        } else if (payload < -ROBBY_STEER_THRESHOLD) {
+            cmd = 'L';
+        } else {
+            cmd = 'S';
+        } 
+    }
+    
+    v.push_back(cmd);
+    
+#if with_ble    // Output generated vector via BLE
     ble_client->write(v);
+#endif
+    cerr << "ble: wrote [" << cmd << "]" << endl;
+
 }
 
