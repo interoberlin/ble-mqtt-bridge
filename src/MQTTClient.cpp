@@ -93,7 +93,7 @@ bool MQTTClient::sendMessage(string message, string subtopic  /* = "" */)
     // * qos (0,1,2)
     // * retain (boolean) - indicates if message is retained on broker or not
     // Should return MOSQ_ERR_SUCCESS
-    int ret = publish(NULL, topic.c_str(), message.length(), message.c_str(), 1, false);
+    int ret = publish(NULL, topic.c_str(), message.length(), message.c_str(), 0, false);
     // cout << "mqtt send " << message << " done: " << topic << " " <<  ret;
     return (ret == MOSQ_ERR_SUCCESS);
 
