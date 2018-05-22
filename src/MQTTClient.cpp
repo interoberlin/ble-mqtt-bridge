@@ -8,7 +8,7 @@
 #include "debug.h"
 
 // shall I write the message to the BLEClient
-#define with_ble 0
+#define with_ble 1
 
 #define ROBBY_TOPIC_STEER              "joystick/cyborg3d/1"
 #define ROBBY_TOPIC_DRIVE              "joystick/cyborg3d/0"
@@ -133,7 +133,7 @@ void MQTTClient::on_message(const struct mosquitto_message* message)
         int payload = atoi((char*) message->payload);
         if (payload > ROBBY_DRIVE_THRESHOLD) {
             cmd = 'F';
-        } else if (payload < -ROBBY_DRIVE_THRESHOLD) {
+        } else if (payload < (-1 * ROBBY_DRIVE_THRESHOLD)) {
             cmd = 'B';
         } else {
             cmd = 'S';
@@ -144,7 +144,7 @@ void MQTTClient::on_message(const struct mosquitto_message* message)
         int payload = atoi((char*)message->payload);
         if (payload > ROBBY_STEER_THRESHOLD) {
             cmd = 'R';
-        } else if (payload < -ROBBY_STEER_THRESHOLD) {
+        } else if (payload < (-1 * ROBBY_STEER_THRESHOLD)) {
             cmd = 'L';
         } else {
             cmd = 'S';
