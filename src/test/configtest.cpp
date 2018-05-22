@@ -12,17 +12,17 @@ namespace ns {
     struct sensor {
         // int index;
         std::string index;
-        std::string checkerboadrId;
+        std::string checkerboardId;
     };
 
     void to_json(json& j, const sensor& s) {
-        j = json{{"index", s.index}, {"checkerboardId", s.checkerboadrId}};
+        j = json{{"index", s.index}, {"checkerboardId", s.checkerboardId}};
     }
 
     void from_json(const json& j, sensor& s) {
         // s.index          = j.at("index").get<int>();
         s.index          = j.at("index").get<std::string>();
-        s.checkerboadrId = j.at("checkerboardId").get<std::string>();
+        s.checkerboardId = j.at("checkerboardId").get<std::string>();
     }
 
     // +++ mapping for beacon
@@ -39,13 +39,14 @@ namespace ns {
     void from_json(const json& j, beacon& b) {
         b.address = j.at("address").get<std::string>();
         b.owner   = j.at("owner").get<std::string>();
-        b.sensors  = j.at("sensors").get<std::vector<ns::sensor>>();
+        b.sensors = j.at("sensors").get<std::vector<ns::sensor>>();
     }
 
     // +++ mapping for beacons
     struct beacons {
         std::vector<beacon> beacons;
     };
+    
     void to_json(json& j, const beacons& b) {
         j = json{{"beacons", b.beacons}};
     }
