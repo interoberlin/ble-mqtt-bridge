@@ -7,3 +7,4 @@ add_subdirectory(libendpoints)
 # define binaries
 add_subdirectory(floorsensord)
 # add_subdirectory(alarmlightd)
+add_subdirectory(test)
