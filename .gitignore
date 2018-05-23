@@ -8,8 +8,6 @@
 *.hex
 *.so
 *.so.0*
-alarmlightd
-floorsensord
 carbotd
 
 # Eclipse
