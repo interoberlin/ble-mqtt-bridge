@@ -10,6 +10,7 @@
 #include <stdbool.h>
 #include <string>
 #include <fstream>
+#include <vector>
 // Library from https://github.com/nlohmann/json
 #include <nlohmann/json.hpp>
 #include "endpoints/BLEClient.hpp"
@@ -19,6 +20,26 @@
 using json = nlohmann::json;
 using namespace std;
 
+namespace jConfig {
+    struct sensor_t {
+        // int index;
+        std::string index;
+        std::string checkerboardId;
+    };
+
+    // +++ mapping for beacon
+    struct beacon_t {
+        std::string address;
+        std::string owner;
+        std::vector<sensor_t> sensors;
+    };
+
+    // +++ mapping for beacons
+    struct beacons_t {
+        std::vector<jConfig::beacon_t> beacons;
+    };
+
+} // namespace jConfig
 
 namespace floorsensord
 {
@@ -35,21 +56,7 @@ namespace floorsensord
     {
     private:
         json config;
-
-        struct bridge_t {
-            std::string mqttClientName;
-            std::string mqttTopic;
-            std::string mqttHost;
-            int mqttPort;
-            BLEClientRole::role_enum bleClienRole;
-            std::string bleAddress;
-            std::string bleOwner;
-            std::string bleLocation;
-            std::string bleService;
-            std::string bleCharacteristic;
-        } bridge_config;
-
-
+        jConfig::beacons_t jconfig;
 
     public:
         /**
