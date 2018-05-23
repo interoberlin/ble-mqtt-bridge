@@ -65,6 +65,8 @@ void Config::printCheck()
 {
     for (auto const& B: jconfig.beacons) {
     
+        cerr << endl;
+        cerr << "+++++++++" << endl;
         cerr << "Address: " << B.address << endl;
         cerr << "Owner:   " << B.owner << endl;
     
@@ -72,6 +74,7 @@ void Config::printCheck()
     
             cerr << "  checkerboardId: " << S.checkerboardId << endl;
             cerr << "  index:          " << S.index << endl;
+            cerr << endl;
     
         }
     }
