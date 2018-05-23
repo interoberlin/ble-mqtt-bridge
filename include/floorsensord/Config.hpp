@@ -22,8 +22,8 @@ using namespace std;
 
 namespace jConfig {
     struct sensor_t {
-        // int index;
-        std::string index;
+        uint8_t index;
+        // std::string index;
         std::string checkerboardId;
     };
 
@@ -81,6 +81,11 @@ namespace floorsensord
          * with newly created ValueSplitter objects
          */
         void generateValueSplitters(vector<ValueSplitter*>& splitterList, MQTTClient* mqtt);
+
+        /**
+         * Associate Beacon to ValueSplitter
+         */
+        void associateBeaconsAndValueSplitters(vector<BLEClient*>& beaconList, vector<ValueSplitter*>& splitterList);
     };
 }
 

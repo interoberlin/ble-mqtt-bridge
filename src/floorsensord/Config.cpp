@@ -13,8 +13,8 @@ namespace jConfig {
     }
 
     void from_json(const json& j, sensor_t& s) {
-        // s.index          = j.at("index").get<int>();
-        s.index          = j.at("index").get<std::string>();
+        s.index          = j.at("index").get<int>();
+        // s.index          = j.at("index").get<std::string>();
         s.checkerboardId = j.at("checkerboardId").get<std::string>();
     }
 
@@ -83,12 +83,40 @@ void Config::printCheck()
 
 void Config::generateBeacons(vector<BLEClient*>& beaconList)
 {
-    // TODO
+    for (auto const& B: jconfig.beacons) {
+
+        BLEClient* b = new BLEClient(
+            BLEClientRole::READER, 
+            B.address, 
+            UUID_SERVICE,
+            UUID_CHARACTERISTIC3);     
+
+        beaconList.push_back(b);
+    }
 }
 
 
 void Config::generateValueSplitters(vector<ValueSplitter*>& splitterList, MQTTClient* mqtt)
 {
-    // TODO
+    for (auto const& B: jconfig.beacons) {
+
+        ValueSplitter *v = new ValueSplitter();
+        v->registerEventReceiver(mqtt);
+
+        for (auto const& S: B.sensors) {
+    
+             v->setCheckerboardId( S.index, S.checkerboardId );
+             v->enableSensor( S.index );
+        }
+        
+        splitterList.push_back(v);
+    }
+
 }
 
+void Config::associateBeaconsAndValueSplitters(vector<BLEClient*>& beaconList, vector<ValueSplitter*>& splitterList) 
+{
+    for (uint8_t i = 0; i < beaconList.size(); i++) {
+        beaconList[i]->registerEventReceiver(splitterList[i]);
+    }
+}

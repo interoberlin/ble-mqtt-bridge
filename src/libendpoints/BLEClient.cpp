@@ -285,3 +285,7 @@ void BLEClient::stopReaderThread()
     pthread_join(reader_thread_id, NULL);
 }
 
+void BLEClient::event(event_t* e)
+{
+
+}
