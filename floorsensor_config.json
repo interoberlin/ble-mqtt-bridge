@@ -27,6 +27,20 @@
           "index": 1
         }
       ]
+    },
+    {
+      "address": "F6:56:9D:78:F0:2E",
+      "owner": "Goetz",
+      "sensors": [
+        {
+          "checkerboardId": "G1",
+          "index": 0
+        },
+        {
+          "checkerboardId": "G2",
+          "index": 1
+        }
+      ]
     }
   ]
 }
