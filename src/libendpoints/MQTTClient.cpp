@@ -3,7 +3,8 @@
 #include <iostream>
 #include <string.h>
 
-#include "debug.h"
+#define LOGURU_WITH_STREAMS 1
+#include <loguru.hpp>
 
 
 MQTTClient::MQTTClient(
@@ -23,7 +24,7 @@ MQTTClient::MQTTClient(
     this->id = id;
     this->port = port;
     this->host = host;
-    this->topic = topic;
+    // this->topic = topic;
     this->defaultTopic = topic;
     connected = false;
 
@@ -64,14 +65,13 @@ void MQTTClient::on_connect(int rc)
 {
     if (rc == 0)
     {
-        if (debug_flag > DEBUG_NONE) {
-            cout << ">> Connected to MQTT broker" << endl;  
-        } 
+        DLOG_S(INFO) << "Connected to MQTT broker";  
+        
         connected = true;
     }
     else
     {
-        cerr << ">> Unable to connect to MQTT broker (return code " << rc << ")" << endl;
+        LOG_S(ERROR) << ">> Unable to connect to MQTT broker (return code " << rc << ")";
         connected = false;
     }
 }
@@ -79,26 +79,25 @@ void MQTTClient::on_connect(int rc)
 
 void MQTTClient::on_disconnect(int rc)
 {
-    if (debug_flag > DEBUG_MORE) {
-        cout << ">> MQTT broker disconnected (" << rc << ")" << endl;
-    }
+    
+    LOG_S(INFO) << ">> MQTT broker disconnected (" << rc << ")";
+    
     connected = false;
 }
 
 
 void MQTTClient::on_publish(int mid)
 {
-    // if (debug_flag > DEBUG_NONE) {
-        cout << ">> MQTT message published (" << mid << ")" << endl;
-    // } 
+        DLOG_S(9) << ">> MQTT message published (" << mid << ")";
+ 
 }
 
 
 void MQTTClient::on_message(const struct mosquitto_message* message)
 {
-    if (debug_flag > DEBUG_NONE) {
-        cout << ">> MQTT message received" << endl;
-    }
+    
+    DLOG_S(INFO) << ">> MQTT message received" << endl;
+    
 
     // No one is listening, so just discard the message
     if (!this->hasEventReceiver())
@@ -118,39 +117,36 @@ void MQTTClient::on_message(const struct mosquitto_message* message)
 }
 
 
-void MQTTClient::setTopic(string topic)
-{
-    this->topic = topic.c_str();
-}
+// void MQTTClient::setTopic(string topic)
+// {
+//     LOG_S(INFO) << "setTopic: " << topic;
+//     this->topic = topic.c_str();
+//     LOG_S(INFO) << "setTopic2: " << this->topic;
+// }
 
 
-bool MQTTClient::sendMessage(char* s, uint8_t length)
+bool MQTTClient::sendMessage(char* s, uint8_t length, char* topic)
 {
     if (!connected)
         return false;
+    
+    // LOG_S(INFO) << "sendMessage: dTopic [" << this->defaultTopic << "]"
 
-    int ret = publish(NULL, this->topic, length, s, 1, false);
+    int ret = publish(NULL, topic, length, s, 1, false);
     return (ret == MOSQ_ERR_SUCCESS);
 }
 
 
-bool MQTTClient::sendMessage(string msg)
+bool MQTTClient::sendMessage(string msg, string subtopic /* = "" */)
 {
-    return sendMessage((char*) msg.c_str(), (uint8_t) msg.length());
-}
-
-
-bool MQTTClient::sendMessage(char* subtopic, char* msg, uint8_t length)
-{
-    setTopic(string(defaultTopic) + "/" + string(subtopic));
-    return sendMessage(msg, length);
-}
-
-
-bool MQTTClient::sendMessage(string subtopic, string msg)
-{
-    setTopic(string(defaultTopic) + "/" + subtopic);
-    return sendMessage(msg);
+    string topic = this->defaultTopic;
+    
+    if (subtopic.size()) {
+        topic += "/";
+        topic += subtopic;
+    }
+    
+    return sendMessage((char*) msg.c_str(), (uint8_t) msg.length(), (char*) topic.c_str());
 }
 
 
@@ -159,10 +155,10 @@ void MQTTClient::event(event_t* e)
     switch (e->source)
     {
         case EventSource::BLE:
-            sendMessage(e->bleData, e->bleDataLength);
+            sendMessage(e->bleData, e->bleDataLength, NULL);
             break;
         case EventSource::SPLITTER:
-            sendMessage(e->checkerboardId, to_string(e->sensorValue));
+            sendMessage(to_string(e->sensorValue), e->checkerboardId);
             break;
         default:
             break;

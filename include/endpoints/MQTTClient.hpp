@@ -24,7 +24,6 @@ class MQTTClient:
   private:
     const char* host;
     const char* id;
-    const char* topic;
     const char* defaultTopic;
     int port;
     int keepalive;
@@ -40,18 +39,14 @@ class MQTTClient:
     MQTTClient(string id, string topic, string host, int port);
     ~MQTTClient();
 
-    /** Update topic for next call to sendMessage() */
-    void setTopic(string s);
 
-    bool sendMessage(char* msg, uint8_t length);
-    bool sendMessage(string msg);
 
     /**
      * Treat the configured topic as parent path,
      * append a "/" and publish to the specified subtopic
      */
-    bool sendMessage(char* subtopic, char* msg, uint8_t length);
-    bool sendMessage(string subtopic, string msg);
+    bool sendMessage(char* msg, uint8_t length, char* topic);
+    bool sendMessage(string msg, string topic);
 
     void event(event_t*);
 };

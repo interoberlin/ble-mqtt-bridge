@@ -17,6 +17,11 @@
 #include <getopt.h>
 #include <stdlib.h>
 
+//  https://github.com/emilk/loguru.git
+#define LOGURU_IMPLEMENTATION 1
+#define LOGURU_WITH_STREAMS 1
+#include <loguru.hpp>
+
 #include "floorsensord/Config.hpp"
 #include "floorsensord/ValueSplitter.hpp"
 #include "endpoints/BLEClient.hpp"
@@ -25,19 +30,11 @@
 #include "events/EventReceiver.hpp"
 #include "events/EventGenerator.hpp"
 
-#include "debug.h"
-
 using namespace std;
 using namespace std::chrono_literals;
 using namespace floorsensord;
 
 
-/*
- * Command line option global vars
- */
-
-/** Debug level */
-debug_flags debug_flag = DEBUG_NONE;
 
 /** Print configuration check and exit? */
 bool config_check_flag = false;
@@ -69,19 +66,13 @@ void parseArgs(int argc, char* argv[])
 {
     int option_char;
 
+    // let loguru pic an eventually defined -v verbosity level
+    loguru::init(argc, argv);
+
     while ((option_char = getopt (argc, argv, "cd:f:?")) != EOF) {
         switch (option_char) {
-            case 'd': {
-                char* end_p = NULL;
-                errno = 0;
-                long temp_val = strtol(optarg, &end_p, 10);
-                if (end_p != optarg && errno != ERANGE && temp_val >= DEBUG_NONE && temp_val <= DEBUG_ALL) {
-                    debug_flag = (debug_flags) temp_val;
-                }
-            } break;
             case 'c': 
                 config_check_flag = true; 
-                debug_flag = DEBUG_ALL; 
                 break;
             case 'f': 
                 config_filename = optarg;
