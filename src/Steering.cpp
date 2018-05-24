@@ -83,16 +83,16 @@ void Steering::eventAxis(js_event_t* e)
     /*
      * Wait at least 200ms before publishing again
      */
-    if (e->time > time_last_publish+200)
-    {
-        // Axis number
-        string subtopic = to_string(e->number);
-        // Publish the raw value
-        string message = to_string(e->value);
-        mqtt->sendMessage(message, subtopic);
-
-        time_last_publish = e->time;
-    }
+//    if (e->time > time_last_publish+200)
+//    {
+//        // Axis number
+//        string subtopic = to_string(e->number);
+//        // Publish the raw value
+//        string message = to_string(e->value);
+//        mqtt->sendMessage(message, subtopic);
+//
+//        time_last_publish = e->time;
+//    }
 }
 
 
