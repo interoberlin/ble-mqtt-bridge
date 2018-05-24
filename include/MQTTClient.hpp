@@ -7,12 +7,41 @@
 #define MQTTCLIENT_HPP
 
 #include <stdint.h>
+#include <string>
 #include <mosquittopp.h>
 
 using namespace std;
 
-class BLEClient;
+namespace Robby
+{
+    namespace Command
+    {
+        const char Stop = 'S';
+        const char Forward = 'F';
+        const char Backward = 'B';
+        const char Left = 'L';
+        const char Right = 'R';
+        const char RotateLeft = '<';
+        const char RotateRight = '>';
+    }
 
+    namespace Subtopic
+    {
+        /*
+         * This list must be equivalent to the
+         * one in joystick-mqtt/include/Steering.hpp
+         */
+        const string Stop = "stop";
+        const string Forward = "forward";
+        const string Backward = "backward";
+        const string Left = "left";
+        const string Right = "right";
+        const string RotateLeft = "rotateleft";
+        const string RotateRight = "rotateright";
+    }
+}
+
+class BLEClient;
 
 class MQTTClient: public mosqpp::mosquittopp
 {

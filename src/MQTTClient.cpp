@@ -126,31 +126,39 @@ void MQTTClient::on_message(const struct mosquitto_message* message)
     if (message->payloadlen == 0)
         return;
 
+    string base_topic = "joystick/cyborg3d";
+    string topic = string(message->topic);
+
+    // Default: Stop
+    char cmd = Robby::Command::Stop;
+
+    if (topic == base_topic + "/" + Robby::Subtopic::Forward)
+    {
+        cmd = Robby::Command::Forward;
+    }
+    else if (topic == base_topic + "/" + Robby::Subtopic::Backward)
+    {
+        cmd = Robby::Command::Backward;
+    }
+    else if (topic == base_topic + "/" + Robby::Subtopic::Left)
+    {
+        cmd = Robby::Command::Left;
+    }
+    else if (topic == base_topic + "/" + Robby::Subtopic::Right)
+    {
+        cmd = Robby::Command::Right;
+    }
+    else if (topic == base_topic + "/" + Robby::Subtopic::RotateLeft)
+    {
+        cmd = Robby::Command::RotateLeft;
+    }
+    else if (topic == base_topic + "/" + Robby::Subtopic::RotateRight)
+    {
+        cmd = Robby::Command::RotateRight;
+    }
+    
     // Convert message payload to vector
     vector<uint8_t> v;
-    char cmd = '0';
-    if (strcmp(message->topic, ROBBY_TOPIC_DRIVE)) { // drive
-        int payload = atoi((char*) message->payload);
-        if (payload > ROBBY_DRIVE_THRESHOLD) {
-            cmd = 'F';
-        } else if (payload < (-1 * ROBBY_DRIVE_THRESHOLD)) {
-            cmd = 'B';
-        } else {
-            cmd = 'S';
-        } 
-    }
-    
-    if (strcmp(message->topic, ROBBY_TOPIC_STEER)) { // steer
-        int payload = atoi((char*)message->payload);
-        if (payload > ROBBY_STEER_THRESHOLD) {
-            cmd = 'R';
-        } else if (payload < (-1 * ROBBY_STEER_THRESHOLD)) {
-            cmd = 'L';
-        } else {
-            cmd = 'S';
-        } 
-    }
-    
     v.push_back(cmd);
     
 #if with_ble    // Output generated vector via BLE
