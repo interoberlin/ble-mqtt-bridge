@@ -65,7 +65,7 @@ void MQTTClient::on_connect(int rc)
 {
     if (rc == 0)
     {
-        LOG_S(INFO) << "Connected to MQTT broker";  
+        DLOG_S(INFO) << "Connected to MQTT broker";  
         
         connected = true;
     }
@@ -88,7 +88,7 @@ void MQTTClient::on_disconnect(int rc)
 
 void MQTTClient::on_publish(int mid)
 {
-        LOG_S(INFO) << ">> MQTT message published (" << mid << ")";
+        DLOG_S(9) << ">> MQTT message published (" << mid << ")";
  
 }
 
@@ -96,7 +96,7 @@ void MQTTClient::on_publish(int mid)
 void MQTTClient::on_message(const struct mosquitto_message* message)
 {
     
-    LOG_S(INFO) << ">> MQTT message received" << endl;
+    DLOG_S(INFO) << ">> MQTT message received" << endl;
     
 
     // No one is listening, so just discard the message

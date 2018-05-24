@@ -1,5 +1,6 @@
 
 #include <iostream>
+#include <exception>
 
 #include "endpoints/BLEClient.hpp"
 
@@ -68,7 +69,18 @@ static void* bleclient_connection_thread(void* argv)
             if (!ble_client->manager->get_discovering())
             {
                 LOG_S(INFO) << "Starting to scan for BLE devices...";
-                ble_client->manager->start_discovery();
+                
+                try {
+                
+                    ble_client->manager->start_discovery();
+                
+                // TODO Wie kann man eine tinyb::BluetoothException richtig ansprechen?
+                } catch ( ... ) {
+                
+                    LOG_S(INFO) << "encountered temporary BLE scan problem... recovering";
+                    continue;
+                
+                }
             }
             else
             {
@@ -91,17 +103,22 @@ static void* bleclient_connection_thread(void* argv)
             if (!ble_client->device->get_connected())
             {
                 was_previously_connected = false;
-                LOG_S(INFO) << "Connecting..." << ble_client->device_address;
+                LOG_S(INFO) << "Connecting... " << ble_client->device_address;
 
-                ble_client->manager->stop_discovery();
-                ble_client->device->disconnect();
-                ble_client->device->connect();
+                try {
+                    ble_client->manager->stop_discovery();
+                    ble_client->device->disconnect();
+                    ble_client->device->connect();
+                } catch ( ... ) {
+                    LOG_S(WARNING) << "timeout: BLE connect to " << ble_client->device_address;
+                    continue; 
+                }
             }
             else
             {
                 if (was_previously_connected)
                 {
-                    LOG_S(INFO) << "Still connected to beacon." << ble_client->device_address;
+                    LOG_S(9) << "Still connected to beacon " << ble_client->device_address;
                 }
                 else
                 {
@@ -172,7 +189,7 @@ void BLEClient::startConnectionThread()
     int rc = pthread_create(&connection_thread_id, NULL, &bleclient_connection_thread, this);
     if (rc != 0)
     {
-        cerr << "!! BLE: Error: Unable to start connection thread." << endl;
+        LOG_S(ERROR) << "!! BLE: Error: Unable to start connection thread.";
         return;
     }
     pthread_setname_np(connection_thread_id, "ble-conn-mgr");
@@ -200,7 +217,7 @@ void BLEClient::write(vector<uint8_t>& value)
 {
     if (characteristic == NULL)
     {
-        cerr << "BLE: Unable to write: Characteristic not resolved." << endl;
+        LOG_S(ERROR) << "BLE: Unable to write: Characteristic not resolved.";
         return;
     }
 
@@ -222,7 +239,7 @@ static void* bleclient_reader_thread(void* argv)
     {
         if (ble_client->characteristic != NULL)
         {
-            LOG_S(INFO) << "Reading data from BLE beacon..." << ble_client->device_address;
+            LOG_S(9) << "Reading data from BLE beacon " << ble_client->device_address;
 
             vector<uint8_t> data = ble_client->characteristic->read_value(0);
 
@@ -255,13 +272,13 @@ void BLEClient::startReaderThread()
 {
     if (reader_thread_running)
     {
-        cerr << "!! Reader thread already running with ID " <<  reader_thread_id << endl;
+        LOG_S(ERROR) << "!! Reader thread already running with ID " <<  reader_thread_id;
         return;
     }
 
     if (role != BLEClientRole::READER)
     {
-        cerr << "!! Won't start reader thread: This object's role is not READER." << endl;
+        LOG_S(ERROR) << "!! Won't start reader thread: This object's role is not READER.";
         return;
     }
 
@@ -269,7 +286,7 @@ void BLEClient::startReaderThread()
     int rc = pthread_create(&reader_thread_id, NULL, &bleclient_reader_thread, this);
     if (rc != 0)
     {
-        cerr << "Error: Unable to start reader thread" << endl;
+        LOG_S(ERROR) << "Error: Unable to start reader thread";
         return;
     }
 
