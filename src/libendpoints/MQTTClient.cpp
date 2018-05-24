@@ -128,6 +128,8 @@ bool MQTTClient::sendMessage(char* s, uint8_t length)
     if (!connected)
         return false;
 
+    LOG_S(INFO) << "dTopic [" << this->defaultTopic << "] topic [" << this->topic << "]";
+
     int ret = publish(NULL, this->topic, length, s, 1, false);
     return (ret == MOSQ_ERR_SUCCESS);
 }
@@ -141,15 +143,30 @@ bool MQTTClient::sendMessage(string msg)
 
 bool MQTTClient::sendMessage(char* subtopic, char* msg, uint8_t length)
 {
+    bool ret;
+
     setTopic(string(defaultTopic) + "/" + string(subtopic));
-    return sendMessage(msg, length);
+    
+    ret = sendMessage(msg, length);
+
+    setTopic(string(defaultTopic));
+
+    return ret;
 }
 
 
 bool MQTTClient::sendMessage(string subtopic, string msg)
 {
+    bool ret;
+
+    
     setTopic(string(defaultTopic) + "/" + subtopic);
-    return sendMessage(msg);
+    
+    ret = sendMessage(msg);
+
+    setTopic(string(defaultTopic));
+
+    return ret;
 }
 
 

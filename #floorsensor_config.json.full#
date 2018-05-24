@@ -1,0 +1,219 @@
+:q
+{
+  "beacons": [
+    {
+      "address": "4D:FA:10:CC:26:0D",
+      "owner": "Florian",
+      "sensors": [
+        {
+          "id": 0,
+          "checkerboardId": "floorsensor/F1/",
+          "checkerboardId": "F1",
+          "index": "00"
+        },
+        {
+          "id": 1,
+          "checkerboardId": "floorsensor/F2/",
+          "checkerboardId": "F2",
+          "index": "01"
+        }
+      ]
+    },
+    {
+      "address": "C2:CE:B6:BC:D7:5B",
+      "owner": "Matthias",
+      "sensors": [
+        {
+          "id": 0,
+          "checkerboardId": "floorsensor/M1/",
+          "checkerboardId": "M1",
+          "index": "00"
+        },
+        {
+          "id": 1,
+          "checkerboardId": "floorsensor/M2/",
+          "checkerboardId": "M2",
+          "index": "01"
+        }
+      ]
+    },
+    {
+      "address": "F6:56:9D:78:F0:2E",
+      "owner": "Goetz",
+      "sensors": [
+        {
+          "id": 0,
+          "checkerboardId": "floorsensor/G1/",
+          "checkerboardId": "G1",
+          "index": "00"
+        },
+        {
+          "id": 1,
+          "checkerboardId": "floorsensor/G2/",
+          "checkerboardId": "G2",
+          "index": "01"
+        }
+      ]
+    },
+    {
+      "beacon": "0",
+      "address": "cc:a9:31:a9:cd:f6",
+      "owner": "Baumhaus",
+      "location": "North",
+      "sensors": [
+        {
+          "cable": "A",
+          "checkerboardId": "floorsensor/50/",
+          "index": "50"
+        },
+        {
+          "cable": "A",
+          "checkerboardId": "floorsensor/32/",
+          "index": "32"
+        },
+        {
+          "cable": "A",
+          "checkerboardId": "floorsensor/33/",
+          "index": "33"
+        },
+        {
+          "cable": "A",
+          "checkerboardId": "floorsensor/39/",
+          "index": "39"
+        },
+        {
+          "cable": "A",
+          "checkerboardId": "floorsensor/26/",
+          "index": "26"
+        }
+      ]
+    },
+    {
+      "beacon": "1",
+      "address": "d8:d1:f6:c6:94:5f",
+      "owner": "Baumhaus",
+      "location": "North-West",
+      "sensors": [
+        {
+          "cable": "B",
+          "checkerboardId": "floorsensor/40/",
+          "index": "40"
+        },
+        {
+          "cable": "B",
+          "checkerboardId": "floorsensor/42/",
+          "index": "42"
+        },
+        {
+          "cable": "B",
+          "checkerboardId": "floorsensor/31/",
+          "index": "31"
+        },
+        {
+          "cable": "B",
+          "checkerboardId": "floorsensor/34/",
+          "index": "34"
+        }
+      ]
+    },
+    {
+      "beacon": "2",
+      "address": "25:6b:08:a6:2e:c7",
+      "owner": "Baumhaus",
+      "location": "South-West",
+      "sensors": [
+        {
+          "cable": "C",
+          "checkerboardId": "floorsensor/37/",
+          "index": "37"
+        },
+        {
+          "cable": "C",
+          "checkerboardId": "floorsensor/38/",
+          "index": "38"
+        },
+        {
+          "cable": "C",
+          "checkerboardId": "floorsensor/49/",
+          "index": "49"
+        },
+        {
+          "cable": "C",
+          "checkerboardId": "floorsensor/45/",
+          "index": "45"
+        },
+        {
+          "cable": "C",
+          "checkerboardId": "floorsensor/41/",
+          "index": "41"
+        }
+      ]
+    },
+    {
+      "beacon": "3",
+      "address": "6d:ef:89:e0:8a:db",
+      "owner": "Baumhaus",
+      "location": "South-East",
+      "sensors": [
+        {
+          "cable": "D",
+          "checkerboardId": "floorsensor/35/",
+          "index": "35"
+        },
+        {
+          "cable": "D",
+          "checkerboardId": "floorsensor/44/",
+          "index": "44"
+        },
+        {
+          "cable": "D",
+          "checkerboardId": "floorsensor/36/",
+          "index": "36"
+        },
+        {
+          "cable": "D",
+          "checkerboardId": "floorsensor/47/",
+          "index": "47"
+        },
+        {
+          "cable": "D",
+          "checkerboardId": "floorsensor/43/",
+          "index": "43"
+        }
+      ]
+    },
+    {
+      "beacon": "4",
+      "address": "31:18:32:07:a7:4f",
+      "owner": "Baumhaus",
+      "location": "North-East",
+      "sensors": [
+        {
+          "cable": "E",
+          "checkerboardId": "floorsensor/28/",
+          "index": "28"
+        },
+        {
+          "cable": "E",
+          "checkerboardId": "floorsensor/24/",
+          "index": "24"
+        },
+        {
+          "cable": "E",
+          "checkerboardId": "floorsensor/20/",
+          "index": "20"
+        },
+        {
+          "cable": "E",
+          "checkerboardId": "floorsensor/12/",
+          "index": "12"
+        },
+        {
+          "cable": "E",
+          "checkerboardId": "floorsensor/09/",
+          "index": "09"
+        }
+      ]
+    }
+  ]
+}
