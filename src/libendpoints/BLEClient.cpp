@@ -218,7 +218,7 @@ static void* bleclient_reader_thread(void* argv)
     {
         if (ble_client->characteristic != NULL)
         {
-            cout << ">> Reading data from BLE beacon..." << endl << flush;
+            cout << ">> Reading data from BLE beacon..." << ble_client->device_address << endl << flush;
 
             vector<uint8_t> data = ble_client->characteristic->read_value(0);
 
