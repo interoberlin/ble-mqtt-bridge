@@ -10,8 +10,7 @@ namespace jConfig {
 
     // +++ mapping for sensors
     struct sensor_t {
-        // int index;
-        std::string index;
+        int index;
         std::string checkerboardId;
     };
 
@@ -20,8 +19,7 @@ namespace jConfig {
     }
 
     void from_json(const json& j, sensor_t& s) {
-        // s.index          = j.at("index").get<int>();
-        s.index          = j.at("index").get<std::string>();
+        s.index          = j.at("index").get<int>();
         s.checkerboardId = j.at("checkerboardId").get<std::string>();
     }
 
