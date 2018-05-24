@@ -24,7 +24,7 @@ MQTTClient::MQTTClient(
     this->id = id;
     this->port = port;
     this->host = host;
-    this->topic = topic;
+    // this->topic = topic;
     this->defaultTopic = topic;
     connected = false;
 
@@ -117,56 +117,36 @@ void MQTTClient::on_message(const struct mosquitto_message* message)
 }
 
 
-void MQTTClient::setTopic(string topic)
-{
-    this->topic = topic.c_str();
-}
+// void MQTTClient::setTopic(string topic)
+// {
+//     LOG_S(INFO) << "setTopic: " << topic;
+//     this->topic = topic.c_str();
+//     LOG_S(INFO) << "setTopic2: " << this->topic;
+// }
 
 
-bool MQTTClient::sendMessage(char* s, uint8_t length)
+bool MQTTClient::sendMessage(char* s, uint8_t length, char* topic)
 {
     if (!connected)
         return false;
+    
+    // LOG_S(INFO) << "sendMessage: dTopic [" << this->defaultTopic << "]"
 
-    LOG_S(INFO) << "dTopic [" << this->defaultTopic << "] topic [" << this->topic << "]";
-
-    int ret = publish(NULL, this->topic, length, s, 1, false);
+    int ret = publish(NULL, topic, length, s, 1, false);
     return (ret == MOSQ_ERR_SUCCESS);
 }
 
 
-bool MQTTClient::sendMessage(string msg)
+bool MQTTClient::sendMessage(string msg, string subtopic /* = "" */)
 {
-    return sendMessage((char*) msg.c_str(), (uint8_t) msg.length());
-}
-
-
-bool MQTTClient::sendMessage(char* subtopic, char* msg, uint8_t length)
-{
-    bool ret;
-
-    setTopic(string(defaultTopic) + "/" + string(subtopic));
+    string topic = this->defaultTopic;
     
-    ret = sendMessage(msg, length);
-
-    setTopic(string(defaultTopic));
-
-    return ret;
-}
-
-
-bool MQTTClient::sendMessage(string subtopic, string msg)
-{
-    bool ret;
-
+    if (subtopic.size()) {
+        topic += "/";
+        topic += subtopic;
+    }
     
-    setTopic(string(defaultTopic) + "/" + subtopic);
-    
-    ret = sendMessage(msg);
-
-    setTopic(string(defaultTopic));
-
-    return ret;
+    return sendMessage((char*) msg.c_str(), (uint8_t) msg.length(), (char*) topic.c_str());
 }
 
 
@@ -175,10 +155,10 @@ void MQTTClient::event(event_t* e)
     switch (e->source)
     {
         case EventSource::BLE:
-            sendMessage(e->bleData, e->bleDataLength);
+            sendMessage(e->bleData, e->bleDataLength, NULL);
             break;
         case EventSource::SPLITTER:
-            sendMessage(e->checkerboardId, to_string(e->sensorValue));
+            sendMessage(to_string(e->sensorValue), e->checkerboardId);
             break;
         default:
             break;
