@@ -1,5 +1,9 @@
 project (test)
-add_executable(testJsonMapping configtest.cpp)
+add_executable(testFloorSensorJsonMapping configtest.cpp)
+
+add_executable(testLoguru testLoguru.cpp)
+target_link_libraries (testLoguru pthread dl )
+
 
 # Install binaries
-install (TARGETS testJsonMapping RUNTIME DESTINATION bin)
+install (TARGETS testFloorSensorJsonMapping testLoguru RUNTIME DESTINATION bin)
