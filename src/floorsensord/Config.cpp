@@ -58,6 +58,7 @@ bool Config::importJSON(ifstream& stream)
 
 bool Config::importJSON(string filename)
 {
+    LOG_S(INFO) << "using file " << filename;
     ifstream stream(filename);
     return importJSON(stream);
 }
