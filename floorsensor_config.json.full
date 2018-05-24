@@ -5,16 +5,12 @@
       "owner": "Florian",
       "sensors": [
         {
-          "id": 0,
-          "checkerboardId": "floorsensor/F1/",
           "checkerboardId": "F1",
-          "index": "00"
+          "index": 0
         },
         {
-          "id": 1,
-          "checkerboardId": "floorsensor/F2/",
           "checkerboardId": "F2",
-          "index": "01"
+          "index": 1
         }
       ]
     },
@@ -23,16 +19,12 @@
       "owner": "Matthias",
       "sensors": [
         {
-          "id": 0,
-          "checkerboardId": "floorsensor/M1/",
           "checkerboardId": "M1",
-          "index": "00"
+          "index": 0
         },
         {
-          "id": 1,
-          "checkerboardId": "floorsensor/M2/",
           "checkerboardId": "M2",
-          "index": "01"
+          "index": 1
         }
       ]
     },
@@ -41,16 +33,12 @@
       "owner": "Goetz",
       "sensors": [
         {
-          "id": 0,
-          "checkerboardId": "floorsensor/G1/",
           "checkerboardId": "G1",
-          "index": "00"
+          "index": 0
         },
         {
-          "id": 1,
-          "checkerboardId": "floorsensor/G2/",
           "checkerboardId": "G2",
-          "index": "01"
+          "index": 1
         }
       ]
     },
@@ -61,29 +49,28 @@
       "location": "North",
       "sensors": [
         {
-          "cable": "A",
-          "checkerboardId": "floorsensor/50/",
-          "index": "50"
+          "checkerboardId": "50",
+          "index": 50
         },
         {
           "cable": "A",
-          "checkerboardId": "floorsensor/32/",
-          "index": "32"
+          "checkerboardId": "32",
+          "index": 32
         },
         {
           "cable": "A",
-          "checkerboardId": "floorsensor/33/",
-          "index": "33"
+          "checkerboardId": "33",
+          "index": 33
         },
         {
           "cable": "A",
-          "checkerboardId": "floorsensor/39/",
-          "index": "39"
+          "checkerboardId": "39",
+          "index": 39
         },
         {
           "cable": "A",
-          "checkerboardId": "floorsensor/26/",
-          "index": "26"
+          "checkerboardId": "26",
+          "index": 26
         }
       ]
     },
@@ -95,23 +82,23 @@
       "sensors": [
         {
           "cable": "B",
-          "checkerboardId": "floorsensor/40/",
-          "index": "40"
+          "checkerboardId": "40",
+          "index": 40
         },
         {
           "cable": "B",
-          "checkerboardId": "floorsensor/42/",
-          "index": "42"
+          "checkerboardId": "42",
+          "index": 42
         },
         {
           "cable": "B",
-          "checkerboardId": "floorsensor/31/",
-          "index": "31"
+          "checkerboardId": "31",
+          "index": 31
         },
         {
           "cable": "B",
-          "checkerboardId": "floorsensor/34/",
-          "index": "34"
+          "checkerboardId": "34",
+          "index": 34
         }
       ]
     },
@@ -123,28 +110,28 @@
       "sensors": [
         {
           "cable": "C",
-          "checkerboardId": "floorsensor/37/",
-          "index": "37"
+          "checkerboardId": "37",
+          "index": 37
         },
         {
           "cable": "C",
-          "checkerboardId": "floorsensor/38/",
-          "index": "38"
+          "checkerboardId": "38",
+          "index": 38
         },
         {
           "cable": "C",
-          "checkerboardId": "floorsensor/49/",
-          "index": "49"
+          "checkerboardId": "49",
+          "index": 49
         },
         {
           "cable": "C",
-          "checkerboardId": "floorsensor/45/",
-          "index": "45"
+          "checkerboardId": "45",
+          "index": 45
         },
         {
           "cable": "C",
-          "checkerboardId": "floorsensor/41/",
-          "index": "41"
+          "checkerboardId": "41",
+          "index": 41
         }
       ]
     },
@@ -156,28 +143,28 @@
       "sensors": [
         {
           "cable": "D",
-          "checkerboardId": "floorsensor/35/",
-          "index": "35"
+          "checkerboardId": "35",
+          "index": 35
         },
         {
           "cable": "D",
-          "checkerboardId": "floorsensor/44/",
-          "index": "44"
+          "checkerboardId": "44",
+          "index": 44
         },
         {
           "cable": "D",
-          "checkerboardId": "floorsensor/36/",
-          "index": "36"
+          "checkerboardId": "36",
+          "index": 36
         },
         {
           "cable": "D",
-          "checkerboardId": "floorsensor/47/",
-          "index": "47"
+          "checkerboardId": "47",
+          "index": 47
         },
         {
           "cable": "D",
-          "checkerboardId": "floorsensor/43/",
-          "index": "43"
+          "checkerboardId": "43",
+          "index": 43
         }
       ]
     },
@@ -189,28 +176,28 @@
       "sensors": [
         {
           "cable": "E",
-          "checkerboardId": "floorsensor/28/",
-          "index": "28"
+          "checkerboardId": "28",
+          "index": 28
         },
         {
           "cable": "E",
-          "checkerboardId": "floorsensor/24/",
-          "index": "24"
+          "checkerboardId": "24",
+          "index": 24
         },
         {
           "cable": "E",
-          "checkerboardId": "floorsensor/20/",
-          "index": "20"
+          "checkerboardId": "20",
+          "index": 20
         },
         {
           "cable": "E",
-          "checkerboardId": "floorsensor/12/",
-          "index": "12"
+          "checkerboardId": "12",
+          "index": 12
         },
         {
           "cable": "E",
-          "checkerboardId": "floorsensor/09/",
-          "index": "09"
+          "checkerboardId": "09",
+          "index": 9
         }
       ]
     }
