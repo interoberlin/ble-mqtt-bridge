@@ -85,7 +85,13 @@ int main(int argc, char** argv)
     joystick->registerEventReceiver(steering);
 
     // Infinite event loop
-    pause();
+//    pause();
+
+    while (true)
+    {
+        steering->process();
+        this_thread::sleep_for(200ms);
+    }
 
     delete steering;
     delete joystick;

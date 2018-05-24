@@ -84,6 +84,8 @@ bool MQTTClient::sendMessage(string message, string subtopic  /* = "" */)
         topic = topic + "/" + subtopic;
     }
 
+    cout << topic << endl << flush;
+
     // Send message - depending on QoS, mosquitto lib managed re-submission this the thread
     //
     // * NULL : Message Id (int *) this allow to latter get status of each message
