@@ -8,3 +8,4 @@ add_subdirectory(libendpoints)
 add_subdirectory(floorsensord)
 # add_subdirectory(alarmlightd)
 add_subdirectory(test)
+
