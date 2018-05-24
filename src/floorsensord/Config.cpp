@@ -1,7 +1,9 @@
 
-#include "floorsensord/Config.hpp"
-#include "debug.h"
 #include <iostream>
+#include "floorsensord/Config.hpp"
+
+#define LOGURU_WITH_STREAMS 1
+#include "loguru.hpp"
 
 using namespace floorsensord;
 
@@ -48,7 +50,7 @@ bool Config::importJSON(ifstream& stream)
     }
     catch (exception& e)
     {
-        cerr << e.what() << endl;
+        LOG_S(INFO) << "Look at my custom object: " << e.what();
     }
     return success;
 }
@@ -64,17 +66,14 @@ bool Config::importJSON(string filename)
 void Config::printCheck()
 {
     for (auto const& B: jconfig.beacons) {
-    
-        cerr << endl;
-        cerr << "+++++++++" << endl;
-        cerr << "Address: " << B.address << endl;
-        cerr << "Owner:   " << B.owner << endl;
+        
+        LOG_S(INFO) << "Address: " << B.address;
+        LOG_S(INFO) << "Owner:   " << B.owner;
     
         for (auto const& S: B.sensors) {
     
-            cerr << "  checkerboardId: " << S.checkerboardId << endl;
-            cerr << "  index:          " << S.index << endl;
-            cerr << endl;
+            LOG_S(INFO) << "  checkerboardId: " << S.checkerboardId;
+            LOG_S(INFO) << "  index:          " << S.index;
     
         }
     }

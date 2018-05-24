@@ -1,6 +1,10 @@
 
-#include "endpoints/BLEClient.hpp"
 #include <iostream>
+
+#include "endpoints/BLEClient.hpp"
+
+#define LOGURU_WITH_STREAMS 1
+#include <loguru.hpp>
 
 
 BLEClient::BLEClient(
@@ -63,7 +67,7 @@ static void* bleclient_connection_thread(void* argv)
 
             if (!ble_client->manager->get_discovering())
             {
-                cout << ">> Starting to scan for BLE devices..." << endl << flush;
+                LOG_S(INFO) << "Starting to scan for BLE devices...";
                 ble_client->manager->start_discovery();
             }
             else
@@ -74,7 +78,7 @@ static void* bleclient_connection_thread(void* argv)
                 {
                     if ((*it)->get_address() == ble_client->device_address)
                     {
-                        cout << ">> Found requested beacon in list of known devices" << endl << flush;
+                        LOG_S(INFO) << "Found beacon "<< ble_client->device_address << " in list of known devices";
                         ble_client->device = (*it).release();
                         break;
                     }
@@ -87,7 +91,7 @@ static void* bleclient_connection_thread(void* argv)
             if (!ble_client->device->get_connected())
             {
                 was_previously_connected = false;
-                cout << ">> Connecting..." << endl << flush;
+                LOG_S(INFO) << "Connecting..." << ble_client->device_address;
 
                 ble_client->manager->stop_discovery();
                 ble_client->device->disconnect();
@@ -97,11 +101,11 @@ static void* bleclient_connection_thread(void* argv)
             {
                 if (was_previously_connected)
                 {
-                    cout << ">> Still connected to beacon." << endl << flush;
+                    LOG_S(INFO) << "Still connected to beacon." << ble_client->device_address;
                 }
                 else
                 {
-                    cout << ">> Connected to beacon with address " << ble_client->device_address << endl << flush;
+                    LOG_S(INFO) << "Connected to beacon with address " << ble_client->device_address;
                     was_previously_connected = true;
                 }
 
@@ -117,7 +121,7 @@ static void* bleclient_connection_thread(void* argv)
                             {
                                 if ((*it)->get_uuid() == ble_client->uuid_service)
                                 {
-                                    cout << ">> Found desired BLE service" << endl;
+                                    LOG_S(INFO) << "Found desired BLE service";
                                     fflush(stdout);
                                     ble_client->service = (*it).release();
                                     break;
@@ -139,7 +143,7 @@ static void* bleclient_connection_thread(void* argv)
                         {
                             if ((*it)->get_uuid() == ble_client->uuid_characteristic)
                             {
-                                cout << ">> Found desired BLE characteristic" << endl;
+                                LOG_S(INFO) << "Found desired BLE characteristic";
                                 fflush(stdout);
                                 ble_client->characteristic = (*it).release();
                                 break;
@@ -153,7 +157,7 @@ static void* bleclient_connection_thread(void* argv)
         this_thread::sleep_for(1s);
     }
 
-    cout << ">> BLE connection thread terminated." << endl << flush;
+    LOG_S(ERROR) << "BLE connection thread terminated.";
 
     // Thread terminates
     return NULL;
@@ -196,7 +200,7 @@ void BLEClient::write(vector<uint8_t>& value)
 {
     if (characteristic == NULL)
     {
-        cerr << ">> BLE: Unable to write: Characteristic not resolved." << endl;
+        cerr << "BLE: Unable to write: Characteristic not resolved." << endl;
         return;
     }
 
@@ -218,7 +222,7 @@ static void* bleclient_reader_thread(void* argv)
     {
         if (ble_client->characteristic != NULL)
         {
-            cout << ">> Reading data from BLE beacon..." << ble_client->device_address << endl << flush;
+            LOG_S(INFO) << "Reading data from BLE beacon..." << ble_client->device_address;
 
             vector<uint8_t> data = ble_client->characteristic->read_value(0);
 
@@ -240,7 +244,7 @@ static void* bleclient_reader_thread(void* argv)
         this_thread::sleep_for(ble_client->getReadInterval());
     }
 
-    cout << ">> BLE reader thread terminated." << endl << flush;
+    LOG_S(ERROR) << "BLE reader thread terminated.";
 
     // Thread terminates
     return NULL;

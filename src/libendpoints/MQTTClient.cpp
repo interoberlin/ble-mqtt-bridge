@@ -3,7 +3,8 @@
 #include <iostream>
 #include <string.h>
 
-#include "debug.h"
+#define LOGURU_WITH_STREAMS 1
+#include <loguru.hpp>
 
 
 MQTTClient::MQTTClient(
@@ -64,14 +65,13 @@ void MQTTClient::on_connect(int rc)
 {
     if (rc == 0)
     {
-        if (debug_flag > DEBUG_NONE) {
-            cout << ">> Connected to MQTT broker" << endl;  
-        } 
+        LOG_S(INFO) << "Connected to MQTT broker";  
+        
         connected = true;
     }
     else
     {
-        cerr << ">> Unable to connect to MQTT broker (return code " << rc << ")" << endl;
+        LOG_S(ERROR) << ">> Unable to connect to MQTT broker (return code " << rc << ")";
         connected = false;
     }
 }
@@ -79,26 +79,25 @@ void MQTTClient::on_connect(int rc)
 
 void MQTTClient::on_disconnect(int rc)
 {
-    if (debug_flag > DEBUG_MORE) {
-        cout << ">> MQTT broker disconnected (" << rc << ")" << endl;
-    }
+    
+    LOG_S(INFO) << ">> MQTT broker disconnected (" << rc << ")";
+    
     connected = false;
 }
 
 
 void MQTTClient::on_publish(int mid)
 {
-    // if (debug_flag > DEBUG_NONE) {
-        cout << ">> MQTT message published (" << mid << ")" << endl;
-    // } 
+        LOG_S(INFO) << ">> MQTT message published (" << mid << ")";
+ 
 }
 
 
 void MQTTClient::on_message(const struct mosquitto_message* message)
 {
-    if (debug_flag > DEBUG_NONE) {
-        cout << ">> MQTT message received" << endl;
-    }
+    
+    LOG_S(INFO) << ">> MQTT message received" << endl;
+    
 
     // No one is listening, so just discard the message
     if (!this->hasEventReceiver())
