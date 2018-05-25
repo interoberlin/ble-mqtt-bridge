@@ -6,6 +6,12 @@
 #include <pthread.h>
 #include <time.h>
 #include <unistd.h>
+#include "processors/BluetoothEnabledSwitch.hpp"
+
+//  https://github.com/emilk/loguru.git
+#define LOGURU_IMPLEMENTATION 1
+#define LOGURU_WITH_STREAMS 1
+#include <loguru.hpp>
 
 using namespace std;
 using namespace std::chrono_literals;
