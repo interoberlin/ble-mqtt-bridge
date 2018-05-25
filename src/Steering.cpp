@@ -10,7 +10,18 @@ void Steering::eventButton(js_event_t* e)
 
     string s = "Button";
 
-    mqtt->sendMessage(s);
+    switch (e->number)
+    {
+        case 4:
+            // F1
+            mqtt->sendMessage("1", "switch", "alarmlight");
+            break;
+
+        case 5:
+            // F2
+            mqtt->sendMessage("0", "switch", "alarmlight");
+            break;
+    }
 }
 
 

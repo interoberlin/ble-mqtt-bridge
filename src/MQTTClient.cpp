@@ -71,14 +71,22 @@ MQTTClient::~MQTTClient()
 }
 
 
-bool MQTTClient::sendMessage(string message, string subtopic  /* = "" */) 
+bool MQTTClient::sendMessage(string message, string subtopic, string parent)
 {
     if (!connected)
     {
         return false;
     }
     
-    string topic = this->topic;
+    string topic;
+    if (parent == "")
+    {
+        topic = this->topic;
+    }
+    else
+    {
+        topic = parent;
+    }
     
     if (subtopic.length()) {
         topic = topic + "/" + subtopic;
