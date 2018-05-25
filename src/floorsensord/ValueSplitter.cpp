@@ -18,7 +18,7 @@ void ValueSplitter::event(event_t* e)
     // Stop processing, if no one is listening anyway
     if (!this->hasEventReceiver())
         return;
-    fprintf(stderr, "\n");
+    // fprintf(stderr, "\n");
     for (uint8_t i=0; i<30; i++) {
         fprintf(stderr, "%2x-",  (uint8_t) e->bleData[i]);
     }
