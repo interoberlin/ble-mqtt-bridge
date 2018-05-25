@@ -38,7 +38,7 @@ BLEClient::BLEClient(
     if (role == BLEClientRole::READER)
     {
         // Delay this thread against connections thread intervals
-        this_thread::sleep_for(500ms);
+        this_thread::sleep_for(100ms);
         startReaderThread();
     }
 }
@@ -171,7 +171,7 @@ static void* bleclient_connection_thread(void* argv)
             }
         }
 
-        this_thread::sleep_for(1s);
+        this_thread::sleep_for(5s);
     }
 
     LOG_S(ERROR) << "BLE connection thread terminated.";
