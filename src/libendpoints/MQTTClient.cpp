@@ -96,7 +96,7 @@ void MQTTClient::on_publish(int mid)
 void MQTTClient::on_message(const struct mosquitto_message* message)
 {
     
-    LOG_S(INFO) << ">> MQTT message received" << endl;
+    LOG_S(INFO) << ">> MQTT message received";
     
 
     // No one is listening, so just discard the message
