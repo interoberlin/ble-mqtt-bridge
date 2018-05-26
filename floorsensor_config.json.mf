@@ -1,0 +1,42 @@
+{
+  "beacons": [
+    {
+      "address": "4D:FA:10:CC:26:0D",
+      "owner": "Florian",
+      "sensors": [
+        {
+          "checkerboardId": "F1",
+          "index": 0
+        },
+        {
+          "checkerboardId": "F2",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "address": "C2:CE:B6:BC:D7:5B",
+      "owner": "Matthias",
+      "sensors": [
+        {
+          "checkerboardId": "M3",
+          "index": 2
+        }
+      ]
+    },
+    {
+      "address": "F6:56:9D:78:F0:2E",
+      "owner": "Goetz",
+      "sensors": [
+        {
+          "checkerboardId": "G1",
+          "index": 0
+        },
+        {
+          "checkerboardId": "G2",
+          "index": 1
+        }
+      ]
+    }
+  ]
+}
