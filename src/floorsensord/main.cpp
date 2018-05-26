@@ -40,7 +40,7 @@ using namespace floorsensord;
 bool config_check_flag = false;
 
 /** Filename from which to read configuration */
-string config_filename = "floorsensor_config.json";
+string config_filename = "etc/floorsensor_config.json";
 
 
 /*
