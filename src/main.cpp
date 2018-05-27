@@ -24,7 +24,7 @@ int main( int argc, char* argv[] )
 {
 	// command line options local vars
 	char device_name[64] = "/dev/ttyUSB0";
-	char mqtt_broker_host[64] = "10.42.0.1";
+	char mqtt_broker_host[64] = "buttercup-cumbersnatch.local";
 	int  mqtt_broker_port = 1883;
 
     int option_char;
