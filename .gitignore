@@ -21,4 +21,5 @@ carbotd
 
 # CMake
 build
+build-rpi
 bin
