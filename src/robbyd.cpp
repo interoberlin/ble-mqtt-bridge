@@ -7,7 +7,7 @@
 #include <time.h>
 #include <unistd.h>
 #include <BLEClient.hpp>
-#include <MQTTClient.hpp>
+#include <MQTTClientRobby.hpp>
 #include "debug.h"
 
 using namespace std;
@@ -23,13 +23,13 @@ using namespace std::chrono_literals;
 #define ROBBY_UUID_CHARACTERISTIC      "0000ffe1-0000-1000-8000-00805f9b34fb"
 #define ROBBY_TOPIC_ALL                "joystick/cyborg3d/+"
 
-MQTTClient* mqtt_client = NULL;
+MQTTClientRobby* mqtt_client = NULL;
 BLEClient* ble_client = NULL;
 debug_flags debug_flag = DEBUG_ALL;
 
 void bridge_robby()
 {
-    mqtt_client = new MQTTClient(
+    mqtt_client = new MQTTClientRobby(
                             "robby-daemon",
                             ROBBY_TOPIC_ALL,
                             "localhost",

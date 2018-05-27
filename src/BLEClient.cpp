@@ -88,9 +88,15 @@ static void* bleclient_connection_thread(void* argv)
                 was_previously_connected = false;
                 cout << ">> Connecting..." << endl << flush;
 
-                ble_client->manager->stop_discovery();
-                ble_client->device->disconnect();
-                ble_client->device->connect();
+//                ble_client->manager->stop_discovery();
+//                ble_client->device->disconnect();
+                try
+                {
+                    ble_client->device->connect();
+                }
+                catch (...)
+                {
+                }
             }
             else
             {
@@ -199,7 +205,13 @@ void BLEClient::write(vector<uint8_t>& value)
         return;
     }
 
-    characteristic->write_value(value);
+    try
+    {
+        characteristic->write_value(value);
+    }
+    catch (...)
+    {
+    }
 }
 
 
@@ -221,7 +233,7 @@ static void* bleclient_reader_thread(void* argv)
 
             vector<uint8_t> data = ble_client->characteristic->read_value(0);
 
-            MQTTClient* mqtt_client = ble_client->getReadEventReceiver();
+            MQTTClientRobby* mqtt_client = ble_client->getReadEventReceiver();
             if (mqtt_client != NULL)
             {
                 uint8_t length = data.size();

@@ -30,7 +30,7 @@ namespace BLEClientRole
 }
 
 
-class MQTTClient;
+class MQTTClientRobby;
 
 
 class BLEClient
@@ -72,7 +72,7 @@ private:
     /*
      * MQTT client to call when we received data via BLE
      */
-    MQTTClient* mqtt_client = NULL;
+    MQTTClientRobby* mqtt_client = NULL;
 
 public:
     BLEClient(
@@ -96,8 +96,8 @@ public:
     void setReadInterval(chrono::seconds seconds) { read_interval = seconds; }
     chrono::seconds getReadInterval() { return read_interval; }
 
-    void registerReadEventReceiver(MQTTClient* m) { mqtt_client = m; }
-    MQTTClient* getReadEventReceiver() { return mqtt_client; };
+    void registerReadEventReceiver(MQTTClientRobby* m) { mqtt_client = m; }
+    MQTTClientRobby* getReadEventReceiver() { return mqtt_client; };
 };
 
 

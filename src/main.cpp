@@ -31,13 +31,13 @@ using namespace std::chrono_literals;
 #define FLOORSENSOR_UUID_CHARACTERISTIC3    "00002014-0000-1000-8000-00805f9b34fb"
 
 
-MQTTClient* mqtt_client = NULL;
+MQTTClientRobby* mqtt_client = NULL;
 BLEClient* ble_client = NULL;
 
 
 void bridge_alarmlight()
 {
-    mqtt_client = new MQTTClient(
+    mqtt_client = new MQTTClientRobby(
                             "alarmlight-daemon",
                             "alarmlight/switch",
                             "localhost",
@@ -55,7 +55,7 @@ void bridge_alarmlight()
 
 void bridge_floorsensor()
 {
-    mqtt_client = new MQTTClient(
+    mqtt_client = new MQTTClientRobby(
                             "floorsensor-daemon",
                             "floorsensor/z0",
                             "localhost",

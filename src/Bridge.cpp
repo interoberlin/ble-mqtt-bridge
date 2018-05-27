@@ -13,7 +13,7 @@ Bridge::Bridge(
             string bleCharacteristic
             )
 {
-    mqtt_client = new MQTTClient(
+    mqtt_client = new MQTTClientRobby(
                             mqttClientName,
                             mqttTopic,
                             mqttHost,

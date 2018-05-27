@@ -17,7 +17,7 @@ LDFLAGS += -lmosquittopp
 #
 # Source files
 #
-COMMON_SRCS = src/BLEClient.cpp src/MQTTClient.cpp src/Bridge.cpp
+COMMON_SRCS = src/BLEClient.cpp src/MQTTClientRobby.cpp src/Bridge.cpp
 TARGET1 = floorsensord
 SRCS1 = $(COMMON_SRCS) src/floorsensord.cpp
 OBJS1 = $(SRCS1:.cpp=.o)

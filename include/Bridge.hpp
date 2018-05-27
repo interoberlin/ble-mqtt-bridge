@@ -13,7 +13,7 @@ class Bridge
 {
 private:
     BLEClient* ble_client;
-    MQTTClient* mqtt_client;
+    MQTTClientRobby* mqtt_client;
 
 public:
     Bridge(
