@@ -92,6 +92,7 @@ public:
 
     void setReadInterval(chrono::seconds seconds) { read_interval = seconds; }
     chrono::seconds getReadInterval() { return read_interval; }
+
     void event(event_t* e);
 };
 

@@ -221,7 +221,13 @@ void BLEClient::write(vector<uint8_t>& value)
         return;
     }
 
-    characteristic->write_value(value);
+    try
+    {
+        characteristic->write_value(value);
+    }
+    catch (...)
+    {
+    }
 }
 
 
@@ -305,6 +311,7 @@ void BLEClient::stopReaderThread()
     // Wait for thread to actually terminate
     pthread_join(reader_thread_id, NULL);
 }
+
 
 void BLEClient::event(event_t* e)
 {
