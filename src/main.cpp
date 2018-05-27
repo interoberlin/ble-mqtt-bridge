@@ -20,7 +20,7 @@ bool daemonize = false;
 void parseArgs(int argc, char** argv)
 {
     int c;
-    while ((c = getopt(argc, argv, "f:n:t:h:p:d")) != -1)
+    while ((c = getopt(argc, argv, "?f:n:t:h:p:d")) != -1)
     {
         switch (c)
         {
@@ -43,6 +43,21 @@ void parseArgs(int argc, char** argv)
                 daemonize = true;
                 break;
             case '?':
+                cout << "-f <path to joystick device file>" << endl;
+                cout << "\tDefault: " << devicePath << endl;
+                cout << "-n <MQTT client name>" << endl;
+                cout << "\tDefault: " << mqtt_id << endl;
+                cout << "-t <MQTT topic>" << endl;
+                cout << "\tDefault: " << mqtt_topic << endl;
+                cout << "-h <MQTT broker host>" << endl;
+                cout << "\tDefault: " << mqtt_host << endl;
+                cout << "-p <MQTT broker port>" << endl;
+                cout << "\tDefault: " << mqtt_port << endl;
+                cout << "-d (daemonize)" << endl;
+                cout << "\tDefault: " << (daemonize ? "on" : "off") << endl;
+                cout << flush;
+                exit(0);
+
 //                if (optopt == 'c')
 //                    fprintf(stderr, "Option -%c requires an argument.\n",
 //                            optopt);
