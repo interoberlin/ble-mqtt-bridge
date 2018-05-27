@@ -8,6 +8,7 @@
 *.hex
 *.so
 *.so.0*
+carbotd
 
 # Eclipse
 .project
@@ -15,12 +16,10 @@
 .settings
 .metadata
 
-# Binaries
-robbyd
-floorsensord
+# Visual Studio Code
+.vscode
 
+# CMake
+build
+bin
 
-.vscode/c_cpp_properties.json
-.vscode/tasks.json
-.vscode/tasks.json
-.vscode/settings.json

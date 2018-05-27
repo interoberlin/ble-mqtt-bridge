@@ -1,0 +1,1 @@
+add_library(endpoints BLEClient.cpp MQTTClient.cpp)

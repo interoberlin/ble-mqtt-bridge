@@ -1,0 +1,18 @@
+{
+  "beacons": [
+    {
+      "address": "F6:56:9D:78:F0:2E",
+      "owner": "Goetz",
+      "sensors": [
+        {
+          "checkerboardId": "G3",
+          "index": 2
+        },
+        {
+          "checkerboardId": "G4",
+          "index": 3
+        }
+      ]
+    }
+  ]
+}

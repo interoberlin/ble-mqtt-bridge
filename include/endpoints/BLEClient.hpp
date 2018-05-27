@@ -7,6 +7,9 @@
 #include <thread>
 #include <pthread.h>
 #include <tinyb.hpp>
+#include "events/EventGenerator.hpp"
+#include "events/EventReceiver.hpp"
+
 
 using namespace std;
 using namespace std::chrono_literals;
@@ -30,10 +33,9 @@ namespace BLEClientRole
 }
 
 
-class MQTTClientRobby;
-
-
-class BLEClient
+class BLEClient:
+        virtual public EventGenerator,
+        virtual public EventReceiver
 {
 public:
     /*
@@ -69,11 +71,6 @@ private:
     bool reader_thread_running;
     bool terminate_reader_thread;
 
-    /*
-     * MQTT client to call when we received data via BLE
-     */
-    MQTTClientRobby* mqtt_client = NULL;
-
 public:
     BLEClient(
             BLEClientRole::role_enum role,
@@ -96,8 +93,7 @@ public:
     void setReadInterval(chrono::seconds seconds) { read_interval = seconds; }
     chrono::seconds getReadInterval() { return read_interval; }
 
-    void registerReadEventReceiver(MQTTClientRobby* m) { mqtt_client = m; }
-    MQTTClientRobby* getReadEventReceiver() { return mqtt_client; };
+    void event(event_t* e);
 };
 
 

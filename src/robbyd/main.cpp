@@ -6,9 +6,20 @@
 #include <pthread.h>
 #include <time.h>
 #include <unistd.h>
-#include <BLEClient.hpp>
-#include <MQTTClientRobby.hpp>
-#include "debug.h"
+#include "endpoints/BLEClient.hpp"
+#include "MQTTClientRobby.hpp"
+
+//  https://github.com/emilk/loguru.git
+#define LOGURU_IMPLEMENTATION 1
+#define LOGURU_WITH_STREAMS 1
+#include <loguru.hpp>
+
+typedef enum
+{
+    DEBUG_NONE,
+    DEBUG_MORE,
+    DEBUG_ALL
+} debug_flags;
 
 using namespace std;
 using namespace std::chrono_literals;

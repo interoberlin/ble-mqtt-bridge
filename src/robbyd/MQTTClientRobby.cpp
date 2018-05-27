@@ -1,11 +1,18 @@
 
-#include <MQTTClientRobby.hpp>
-#include <BLEClient.hpp>
+#include "MQTTClientRobby.hpp"
+#include "endpoints/BLEClient.hpp"
 #include <iostream>
 #include <string.h>
 #include <stdlib.h>
 
-#include "debug.h"
+typedef enum
+{
+    DEBUG_NONE,
+    DEBUG_MORE,
+    DEBUG_ALL
+} debug_flags;
+
+extern debug_flags debug_flag;
 
 // shall I write the message to the BLEClient
 #define with_ble 1
