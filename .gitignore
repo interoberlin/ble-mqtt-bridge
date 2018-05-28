@@ -8,11 +8,12 @@
 *.hex
 *.so
 *.so.0*
-carbotd
+*.elf
 
 # Eclipse
 .project
 .cproject
+<<<<<<< HEAD
 .settings
 .metadata
 
@@ -24,3 +25,6 @@ build
 build-rpi
 bin
 
+.pydevproject
+.metadata
+.settings
