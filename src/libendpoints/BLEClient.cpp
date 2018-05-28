@@ -256,10 +256,10 @@ static void* bleclient_reader_thread(void* argv)
             // Create an event!
             event_t e;
             e.source = EventSource::BLE;
-            e.bleDataLength = min(data.size(), sizeof(e.bleData));
-            for (uint8_t i=0; i<e.bleDataLength; i++)
+            e.evt.ble_raw.bleDataLength = min(data.size(), sizeof(e.evt.ble_raw.bleData));
+            for (uint8_t i=0; i<e.evt.ble_raw.bleDataLength; i++)
             {
-                e.bleData[i] = data[i];
+                e.evt.ble_raw.bleData[i] = data[i];
             }
             ble_client->getEventReceiver()->event(&e);
         }

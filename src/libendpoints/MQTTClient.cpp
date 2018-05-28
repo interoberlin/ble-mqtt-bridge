@@ -110,7 +110,7 @@ void MQTTClient::on_message(const struct mosquitto_message* message)
     // Convert message payload to event
     event_t e;
     e.source = EventSource::MQTT;
-    e.mqttMessage = (mqtt_message_t*) message;
+    e.evt.mqttMessage = (mqtt_message_t*) message;
 
     // Generate the event
     getEventReceiver()->event(&e);
@@ -162,10 +162,10 @@ void MQTTClient::event(event_t* e)
     switch (e->source)
     {
         case EventSource::BLE:
-            sendMessage(e->bleData, e->bleDataLength, NULL);
+            sendMessage(e->evt.ble_raw.bleData, e->evt.ble_raw.bleDataLength, NULL);
             break;
         case EventSource::SPLITTER:
-            sendMessage(to_string(e->sensorValue), e->checkerboardId);
+            sendMessage(to_string(e->evt.ble_processed.sensorValue), e->evt.ble_processed.checkerboardId);
             break;
         default:
             break;
