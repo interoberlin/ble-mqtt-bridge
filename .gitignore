@@ -13,7 +13,6 @@
 # Eclipse
 .project
 .cproject
-<<<<<<< HEAD
 .settings
 .metadata
 
@@ -28,3 +27,5 @@ bin
 .pydevproject
 .metadata
 .settings
+.metadata
+
