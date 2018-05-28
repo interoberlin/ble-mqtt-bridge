@@ -93,3 +93,17 @@ log_type error
 log_dest stdout
 log_dest file /var/log/mosquitto/mosquitto.log
 ```
+## Programs
+
+### from BLE/GATT to MQTT
+* Daemon to read values from the [floor-sensors](src/floorsensord/README.md) used in the sentient-project from Baumhaus Berlin
+
+### from MQTT to BLE/GATT
+* Daemon to control a legacy [alarm-lamp](src/alarmlampd/README.md)
+* Daemon to steer an driving [robot](src/robbyd/README.md)
+
+### from USB to MQTT
+* Daemon that reads values from an USB [Joystick](src/joystickd/README.md)
+
+## from serial to MQTT
+* Daemon that reads values from an SDS001 [dustsensor](src/dustsensord/README.md) 
