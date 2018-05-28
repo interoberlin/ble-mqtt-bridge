@@ -14,13 +14,6 @@
 #define LOGURU_WITH_STREAMS 1
 #include <loguru.hpp>
 
-typedef enum
-{
-    DEBUG_NONE,
-    DEBUG_MORE,
-    DEBUG_ALL
-} debug_flags;
-
 using namespace std;
 using namespace std::chrono_literals;
 
@@ -36,7 +29,6 @@ using namespace std::chrono_literals;
 
 MQTTClientRobby* mqtt_client = NULL;
 BLEClient* ble_client = NULL;
-debug_flags debug_flag = DEBUG_ALL;
 
 void bridge_robby()
 {

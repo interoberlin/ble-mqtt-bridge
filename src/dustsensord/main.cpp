@@ -21,11 +21,6 @@
 using namespace std;
 using namespace std::chrono_literals;
 
-// command line option global vars
-typedef enum { DEBUG_NONE=0, DEBUG_NORMAL, DEBUG_MORE, DEBUG_MOST, DEBUG_ALL=9} debug_flags;
-debug_flags debug_flag = DEBUG_NONE;
-
-
 int main( int argc, char* argv[] )
 {
 	// command line options local vars
@@ -37,18 +32,12 @@ int main( int argc, char* argv[] )
     char* end = NULL;
     long temp_val;
 
-    while ((option_char = getopt (argc, argv, "D:d:p:h:")) != EOF) {
+    loguru::init(argc, argv);
+
+    while ((option_char = getopt (argc, argv, "D:p:h:")) != EOF) {
         switch (option_char) {
             case 'D': {
                 snprintf(device_name, sizeof(device_name), "%s", optarg);
-            } break;
-            case 'd': {
-                end = 0;
-                errno = 0;
-                temp_val = strtol(optarg, &end, 10);
-                if (end != optarg && errno != ERANGE && temp_val >= DEBUG_NONE && temp_val <= DEBUG_ALL) {
-                    debug_flag = (debug_flags) temp_val;
-                }
             } break;
             case 'p': {
                 end = 0;
@@ -64,7 +53,7 @@ int main( int argc, char* argv[] )
                 snprintf(mqtt_broker_host, sizeof(mqtt_broker_host), "%s", optarg);
             } break;
             case '?':
-                 cerr << "usage: " << argv[0] << " [D<val>d<val>p<val>h<val>]" << endl; break;
+                 cerr << "usage: " << argv[0] << " [D<val>v<val>p<val>h<val>]" << endl; break;
             break;
         } // switch
     } // while ((option_char ...
@@ -76,26 +65,22 @@ int main( int argc, char* argv[] )
 
 	uint16_t id = 0;
 
-	if (debug_flag > DEBUG_MORE) 
-    {
-         cout << "Waiting for sensor ID..." << endl << flush;
-    }
-
+	LOG_S(INFO) << "Waiting for sensor ID...";
+    
 	while (id == 0)
 	{
 	    sensor->read(NULL, NULL, &id);
 	    this_thread::sleep_for(1s);
 	}
 	
-    if (debug_flag > DEBUG_MORE)
-    {
-	    cout << "Got sensor " << hex << id << "." << endl << flush;
-    }
-
+    
+    LOG_S(INFO) << "Got sensor " << hex << id << ".";
+    
 	char topic_pm10[42];
 	snprintf(topic_pm10, sizeof(topic_pm10), "dustsensor/%x/pm10", id);
-	cout << "Topic 1 is \"" << topic_pm10 << "\"." << endl << flush;
-	MQTTClient* mqtt10 = new MQTTClient(
+	LOG_S(INFO) << "Topic 1 is \"" << topic_pm10 << "\".";
+	
+    MQTTClient* mqtt10 = new MQTTClient(
                             "dustsensord",
                             (char*) topic_pm10,
                             mqtt_broker_host,
@@ -104,7 +89,8 @@ int main( int argc, char* argv[] )
 
     char topic_pm25[42];
     snprintf(topic_pm25, sizeof(topic_pm25), "dustsensor/%x/pm2.5", id);
-    cout << "Topic 2 is \"" << topic_pm25 << "\"." << endl << flush;
+    LOG_S(INFO) << "Topic 2 is \"" << topic_pm25 << "\"." << endl << flush;
+
     MQTTClient* mqtt25 = new MQTTClient(
                             "dustsensord",
                             (char*) topic_pm25,
@@ -117,9 +103,8 @@ int main( int argc, char* argv[] )
 	{
 		if (sensor->read(&p25, &p10, &id))
 		{
-            if (debug_flag > DEBUG_NORMAL) {
-                 cout << "Sensor " << id << ": PM2.5=" << p25 << " PM10=" << p10 << endl << flush;
-            }
+            LOG_S(INFO) << "Sensor " << id << ": PM2.5=" << p25 << " PM10=" << p10;
+
             mqtt10->sendMessage(&p10);
             this_thread::sleep_for(0.5s);
             mqtt25->sendMessage(&p25);
@@ -127,7 +112,7 @@ int main( int argc, char* argv[] )
 		}
 		else
 		{
-		    cerr << "Sensor Read failed. Sorry :-(";
+		    LOG_S(ERROR) << "Sensor Read failed. Sorry :-(";
             this_thread::sleep_for(1s);
 		}
 	}

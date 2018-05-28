@@ -1,8 +1,16 @@
 #include <stdio.h>
 #include <unistd.h>
+#include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <termios.h>
+
+
+//  https://github.com/emilk/loguru.git
+#define LOGURU_WITH_STREAMS 1
+#include <loguru.hpp>
+
 
 #include "sensors/SerialPort.hpp"
 
@@ -17,14 +25,27 @@ bool SerialPort::open(const char* device, int nBaud )
 	fd = ::open(device, O_RDWR | O_NOCTTY | O_NDELAY);
 
 	if (fd == -1 )	{
-		perror("open_port: Unable to open /dev/ttyS0 – ");
+		LOG_S(ERROR) << "open_port: Unable to open device " << device << strerror(errno);
 
 		return false;
 
 	} else {
-	
-		fcntl(fd, F_SETFL,0);
-		
+
+		/* set the other settings (in this case, 9600 8N1) */
+		struct termios settings;
+		tcgetattr(fd, &settings);
+
+		cfsetospeed(&settings, nBaud); /* baud rate */
+		// settings.c_cflag &= ~PARENB; /* no parity */
+		// settings.c_cflag &= ~CSTOPB; /* 1 stop bit */
+		// settings.c_cflag &= ~CSIZE;
+		// settings.c_cflag |= CS8 | CLOCAL; /* 8 bits */
+		// settings.c_lflag = ICANON; /* canonical mode */
+		// settings.c_oflag &= ~OPOST; /* raw output */
+
+		tcsetattr(fd, TCSANOW, &settings); /* apply the settings */
+		tcflush(fd, TCOFLUSH);
+
 		// printf("Port has been sucessfully opened and %d is the file description\n", fd);
 	}
 
@@ -42,7 +63,7 @@ int SerialPort::read(void* buf, int length)
 	int rd;
 	rd = ::read(fd, buf, length);
 	if (rd < 0 ) {
-		perror("read: unable to read – ");
+		LOG_S(ERROR) << "read: unable to read " << strerror(errno);
 		return -1;
 	}
 	return rd;
@@ -62,7 +83,7 @@ int SerialPort::write(const void* buf, int len)
 	wr = ::write( fd, buf,len );
 
 	if (wr < 0 ) {
-		perror("write: unable to write – ");
+		LOG_S(ERROR) << "write: unable to write " << strerror(errno);
 		return -1;
 	}
 

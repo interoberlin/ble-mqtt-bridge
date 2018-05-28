@@ -5,14 +5,8 @@
 #include <string.h>
 #include <stdlib.h>
 
-typedef enum
-{
-    DEBUG_NONE,
-    DEBUG_MORE,
-    DEBUG_ALL
-} debug_flags;
-
-extern debug_flags debug_flag;
+#define LOGURU_WITH_STREAMS 1
+#include <loguru.hpp>
 
 // shall I write the message to the BLEClient
 #define with_ble 1
@@ -41,9 +35,9 @@ MQTTClientRobby::MQTTClientRobby(
     this->topic = topic;
     connected = false;
 
-    if (debug_flag > DEBUG_MORE) {
-        cerr << "MQTT connect to " << this->topic << endl;
-    }    
+    
+    LOG_S(INFO) << "MQTT connect to " << this->topic;
+
     // Start non-blocking connection attempt to broker
     connect_async(host, port, keepalive);
 
@@ -87,14 +81,12 @@ void MQTTClientRobby::on_connect(int rc)
 {
     if (rc == 0)
     {
-        if (debug_flag > DEBUG_NONE) {
-            cout << ">> Connected to MQTT broker" << endl;  
-        } 
+        LOG_S(INFO) << ">> Connected to MQTT broker";
         connected = true;
     }
     else
     {
-        cerr << ">> Unable to connect to MQTT broker (return code " << rc << ")" << endl;
+        LOG_S(WARNING) << ">> Unable to connect to MQTT broker (return code " << rc << ")";
         connected = false;
     }
 }
@@ -102,26 +94,19 @@ void MQTTClientRobby::on_connect(int rc)
 
 void MQTTClientRobby::on_disconnect(int rc)
 {
-    if (debug_flag > DEBUG_MORE) {
-        cout << ">> MQTT broker disconnected (" << rc << ")" << endl;
-    }
+    LOG_S(WARNING) << ">> MQTT broker disconnected (" << rc << ")";
     connected = false;
 }
 
 
 void MQTTClientRobby::on_publish(int mid)
 {
-    // if (debug_flag > DEBUG_NONE) {
-        cout << ">> MQTT message published (" << mid << ")" << endl;
-    // } 
+    LOG_S(INFO) << ">> MQTT message published (" << mid << ")";
 }
-
 
 void MQTTClientRobby::on_message(const struct mosquitto_message* message)
 {
-    if (debug_flag > DEBUG_NONE) {
-        cout << ">> MQTT message received" << endl;
-    }
+    LOG_S(INFO) << ">> MQTT message received";
 
 #if with_ble
     if (ble_client == NULL)
@@ -171,7 +156,7 @@ void MQTTClientRobby::on_message(const struct mosquitto_message* message)
 #if with_ble    // Output generated vector via BLE
     ble_client->write(v);
 #endif
-    cerr << "ble: wrote [" << cmd << "]" << endl;
+    LOG_S(INFO) << "ble: wrote [" << cmd << "]";
 
 }
 

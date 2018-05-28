@@ -3,6 +3,10 @@
 
 #include "sensors/SDS011.hpp"
 
+//  https://github.com/emilk/loguru.git
+#define LOGURU_WITH_STREAMS 1
+#include <loguru.hpp>
+
 using namespace std;
 
 
@@ -68,7 +72,7 @@ bool SDS011::read(float *p25, float *p10, uint16_t* id)
     if (buffer.empty())
     {
         // Not enough data received (yet)
-        printf("Not enough data received yet.\n");
+        LOG_S(WARNING) << "Not enough data received yet.";
         return false;
     }
 
@@ -132,7 +136,7 @@ bool SDS011::read(float *p25, float *p10, uint16_t* id)
                 else
                 {
                     state = -1;
-                    cerr << "Checksum error" << endl;
+                    LOG_S(WARNING) << "Checksum error" << "value/checksum: " << hex << value << "/" << hex << checksum_reference % 256;
                 }
                 break;
             case 9:
