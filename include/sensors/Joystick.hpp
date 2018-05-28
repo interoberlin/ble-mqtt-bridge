@@ -17,7 +17,7 @@
 #include <stdlib.h>
 #include <thread>
 #include <pthread.h>
-#include "EventGenerator.hpp"
+#include "events/JoystickEventGenerator.hpp"
 
 using namespace std;
 

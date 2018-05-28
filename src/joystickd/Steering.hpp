@@ -2,7 +2,7 @@
 #ifndef STEERING_HPP
 #define STEERING_HPP
 
-#include "EventProcessor.hpp"
+#include "events/JoystickEventProcessor.hpp"
 
 namespace Steer
 {

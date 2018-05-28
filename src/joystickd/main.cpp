@@ -2,9 +2,14 @@
 #include <stdint.h>
 #include <string>
 #include <iostream>
-#include "Joystick.hpp"
-#include "MQTTClient.hpp"
+#include "sensors/Joystick.hpp"
+#include "endpoints/MQTTClient.hpp"
 #include "Steering.hpp"
+
+//  https://github.com/emilk/loguru.git
+#define LOGURU_IMPLEMENTATION 1
+#define LOGURU_WITH_STREAMS 1
+#include <loguru.hpp>
 
 using namespace std;
 

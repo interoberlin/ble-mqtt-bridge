@@ -1,7 +1,7 @@
 
 // #include <stdio.h>
 #include <iostream>
-#include "Joystick.hpp"
+#include "sensors/Joystick.hpp"
 
 
 Joystick::Joystick()

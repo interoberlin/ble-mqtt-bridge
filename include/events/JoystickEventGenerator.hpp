@@ -4,7 +4,7 @@
 
 #include <stddef.h>
 
-#include "EventReceiver.hpp"
+#include "events/JoystickEventReceiver.hpp"
 
 
 /**

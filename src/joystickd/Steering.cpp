@@ -14,13 +14,13 @@ void Steering::eventButton(js_event_t* e)
     {
         case 4:
             // F1
-            mqtt->sendMessage("1", "switch", "alarmlight");
+            mqtt->sendMessage((const char*) "1", 1, (const char*) "alarmlight/switch");
             break;
 
         case 5:
             // F2
-            mqtt->sendMessage("0", "switch", "alarmlight");
-            break;
+            mqtt->sendMessage((const char*) "0", 1,  (const char*) "alarmlight/switch");
+            break; 
     }
 }
 

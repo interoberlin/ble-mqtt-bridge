@@ -1,8 +1,8 @@
 
 #ifndef EVENTPROCESSOR_HPP
 
-#include "MQTTClient.hpp"
-#include "EventReceiver.hpp"
+#include "endpoints/MQTTClient.hpp"
+#include "JoystickEventReceiver.hpp"
 
 
 class JoystickEventProcessor:
