@@ -9,8 +9,14 @@
 #include <getopt.h>
 #include <errno.h>
 #include <limits.h>
-#include <MQTTClient.hpp>
-#include <SDS011.hpp>
+#include <endpoints/MQTTClient.hpp>
+#include <sensors/SDS011.hpp>
+
+//  https://github.com/emilk/loguru.git
+#define LOGURU_IMPLEMENTATION 1
+#define LOGURU_WITH_STREAMS 1
+#include <loguru.hpp>
+
 
 using namespace std;
 using namespace std::chrono_literals;
@@ -114,9 +120,9 @@ int main( int argc, char* argv[] )
             if (debug_flag > DEBUG_NORMAL) {
                  cout << "Sensor " << id << ": PM2.5=" << p25 << " PM10=" << p10 << endl << flush;
             }
-            mqtt10->sendFloat(&p10);
+            mqtt10->sendMessage(&p10);
             this_thread::sleep_for(0.5s);
-            mqtt25->sendFloat(&p25);
+            mqtt25->sendMessage(&p25);
             this_thread::sleep_for(0.5s);
 		}
 		else

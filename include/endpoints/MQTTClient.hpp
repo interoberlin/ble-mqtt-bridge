@@ -72,8 +72,9 @@ class MQTTClient:
      * Treat the configured topic as parent path,
      * append a "/" and publish to the specified subtopic
      */
-    bool sendMessage(char* msg, uint8_t length, char* topic);
-    bool sendMessage(string msg, string topic);
+    bool sendMessage(char* msg, uint8_t length, char* topic = NULL);
+    bool sendMessage(string msg, string topic = "");
+    bool sendMessage(float*);
 
     void event(event_t*);
 };

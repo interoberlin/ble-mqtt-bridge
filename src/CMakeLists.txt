@@ -10,5 +10,6 @@ add_subdirectory(floorsensord)
 add_subdirectory(alarmlightd)
 add_subdirectory(robbyd)
 add_subdirectory(joystickd)
+add_subdirectory(dustsensord)
 add_subdirectory(test)
 

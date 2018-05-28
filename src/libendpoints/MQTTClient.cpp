@@ -149,6 +149,13 @@ bool MQTTClient::sendMessage(string msg, string subtopic /* = "" */)
     return sendMessage((char*) msg.c_str(), (uint8_t) msg.length(), (char*) topic.c_str());
 }
 
+bool MQTTClient::sendMessage(float* f )
+{
+        char s[30];
+    snprintf(s, 30, "%0.01f", *f);
+    return sendMessage(string(s));
+
+}
 
 void MQTTClient::event(event_t* e)
 {

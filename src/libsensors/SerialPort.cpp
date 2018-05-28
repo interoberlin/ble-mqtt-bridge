@@ -4,7 +4,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-#include <SerialPort.hpp>
+#include "sensors/SerialPort.hpp"
 
 SerialPort::~SerialPort()
 {

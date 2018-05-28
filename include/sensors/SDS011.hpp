@@ -13,11 +13,12 @@
 #ifndef SDS011_HPP
 #define SDS011_HPP
 
-#include <SerialPort.hpp>
 #include <stdint.h>
 #include <stdbool.h>
 #include <queue>
 #include <string>
+
+#include "sensors/SerialPort.hpp"
 
 using namespace std;
 
