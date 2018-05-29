@@ -105,6 +105,8 @@ int main(int argc, char* argv[])
                         1883
                         );
 
+        mqtt->setThreadName();
+
         // Create a BLEClient for every configured beacon
         config.generateBeacons(beacons);
         // Create a floorsensor value splitter, that publishes to MQTT
