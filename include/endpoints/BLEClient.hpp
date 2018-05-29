@@ -71,6 +71,20 @@ private:
     bool reader_thread_running;
     bool terminate_reader_thread;
 
+private:
+    int discoveryDelay = 1;
+
+public:
+    int getDiscoveryDelay() {return discoveryDelay; };
+    void setDiscoveryDelay(int delay) { discoveryDelay = delay; }
+
+private:
+    int connectionDelay = 1;
+
+public:
+    int getConnectionDelay() {return connectionDelay; };
+    void setConnectionDelay(int delay) { connectionDelay = delay; }
+
 public:
     BLEClient(
             BLEClientRole::role_enum role,
@@ -92,6 +106,10 @@ public:
 
     void setReadInterval(chrono::seconds seconds) { read_interval = seconds; }
     chrono::seconds getReadInterval() { return read_interval; }
+
+    // set the Name of the thread
+    void setThreadName(std::string name = "ble: NN");
+
 
     void event(event_t* e);
 };

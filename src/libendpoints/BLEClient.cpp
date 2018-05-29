@@ -58,6 +58,8 @@ static void* bleclient_connection_thread(void* argv)
 
     bool was_previously_connected = false;
 
+    ble_client->setThreadName("ble-conn-mgr");
+
     // Run until termination signal received
     while (!ble_client->getConnectionThreadTerminationRequested())
     {
@@ -76,10 +78,15 @@ static void* bleclient_connection_thread(void* argv)
                 
                 // TODO Wie kann man eine tinyb::BluetoothException richtig ansprechen?
                 } catch ( ... ) {
-                
-                    LOG_S(INFO) << "encountered temporary BLE scan problem... recovering";
+                    int delay = ble_client->getDiscoveryDelay();
+                    delay = delay * 2;
+                    if (delay > 512) {
+                        delay = 512;
+                    }
+                    ble_client->setDiscoveryDelay(delay);
+                    LOG_S(WARNING) << "tmout: BLE scan (" << ble_client->getDiscoveryDelay() << "s) " << ble_client->device_address;
+                    this_thread::sleep_for(std::chrono::seconds(ble_client->getDiscoveryDelay()));
                     continue;
-                
                 }
             }
             else
@@ -110,7 +117,14 @@ static void* bleclient_connection_thread(void* argv)
                     ble_client->device->disconnect();
                     ble_client->device->connect();
                 } catch ( ... ) {
-                    LOG_S(WARNING) << "timeout: BLE connect to " << ble_client->device_address;
+                    int delay = ble_client->getConnectionDelay();
+                    delay = delay * 2;
+                    if (delay > 512) {
+                        delay = 512;
+                    }
+                    ble_client->setConnectionDelay(delay);
+                    LOG_S(WARNING) << "tmout: BLE conn (" << ble_client->getConnectionDelay() << "s) " << ble_client->device_address;
+                    this_thread::sleep_for(std::chrono::seconds(ble_client->getConnectionDelay()));
                     continue; 
                 }
             }
@@ -139,7 +153,7 @@ static void* bleclient_connection_thread(void* argv)
                                 if ((*it)->get_uuid() == ble_client->uuid_service)
                                 {
                                     LOG_S(INFO) << "Found desired BLE service";
-                                    fflush(stdout);
+                                    
                                     ble_client->service = (*it).release();
                                     break;
                                 }
@@ -161,7 +175,7 @@ static void* bleclient_connection_thread(void* argv)
                             if ((*it)->get_uuid() == ble_client->uuid_characteristic)
                             {
                                 LOG_S(INFO) << "Found desired BLE characteristic";
-                                fflush(stdout);
+
                                 ble_client->characteristic = (*it).release();
                                 break;
                             }
@@ -192,7 +206,6 @@ void BLEClient::startConnectionThread()
         LOG_S(ERROR) << "!! BLE: Error: Unable to start connection thread.";
         return;
     }
-    pthread_setname_np(connection_thread_id, "ble-conn-mgr");
 
     connection_thread_running = true;
 }
@@ -239,6 +252,13 @@ static void* bleclient_reader_thread(void* argv)
 {
     // Get this thread's owner object
     BLEClient* ble_client = (BLEClient*) argv;
+
+    // set the name of the tread 
+    string devAddr = string(ble_client->device_address);
+    // process/thread names are limited to 16 chars
+    string threadName = string("ble:") + devAddr.substr(devAddr.length()-11,devAddr.length());
+    ble_client->setThreadName(threadName);
+    
 
     // Run until termination signal received
     while (!ble_client->getReaderThreadTerminationRequested())
@@ -316,4 +336,15 @@ void BLEClient::stopReaderThread()
 void BLEClient::event(event_t* e)
 {
 
+}
+
+void BLEClient::setThreadName(std::string name /* = ble: NN */)
+{
+    string threadName =  name;
+    
+    loguru::set_thread_name(threadName.c_str());
+    int rc = pthread_setname_np(pthread_self(), threadName.c_str());
+    if (rc) {
+        LOG_S(ERROR) << "pthread_setname_np returned " << rc;
+    }
 }
