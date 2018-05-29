@@ -19,11 +19,15 @@ void ValueSplitter::event(event_t* e)
     // Stop processing, if no one is listening anyway
     if (!this->hasEventReceiver())
         return;
+
+    // TODO: find better solution for printing out raw values
     // fprintf(stderr, "\n");
-    for (uint8_t i=0; i<30; i++) {
-        fprintf(stderr, "%2x-",  (uint8_t) e->evt.ble_raw.bleData[i]);
-    }
-    fprintf(stderr, "\n");
+    // for (uint8_t i=0; i<30; i++) {
+    //     fprintf(stderr, "%2x-",  (uint8_t) e->evt.ble_raw.bleData[i]);
+    // }
+    // fprintf(stderr, "\n");
+
+
     for (uint8_t i=0; i<15; i++)
     {
         if (sensorEnabled[i])
