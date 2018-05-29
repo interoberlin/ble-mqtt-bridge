@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <unistd.h>
-#include <string.h>
+#include <cstring>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -25,7 +25,7 @@ bool SerialPort::open(const char* device, int nBaud )
 	fd = ::open(device, O_RDWR | O_NOCTTY | O_NDELAY);
 
 	if (fd == -1 )	{
-		LOG_S(ERROR) << "open_port: Unable to open device " << device << strerror(errno);
+		LOG_S(ERROR) << "Unable to open device " << device << " " << std::strerror(errno);
 
 		return false;
 
@@ -63,7 +63,7 @@ int SerialPort::read(void* buf, int length)
 	int rd;
 	rd = ::read(fd, buf, length);
 	if (rd < 0 ) {
-		LOG_S(ERROR) << "read: unable to read " << strerror(errno);
+		LOG_S(ERROR) << "read: unable to read " << std::strerror(errno);
 		return -1;
 	}
 	return rd;
@@ -83,7 +83,7 @@ int SerialPort::write(const void* buf, int len)
 	wr = ::write( fd, buf,len );
 
 	if (wr < 0 ) {
-		LOG_S(ERROR) << "write: unable to write " << strerror(errno);
+		LOG_S(ERROR) << "write: unable to write " << std::strerror(errno);
 		return -1;
 	}
 
