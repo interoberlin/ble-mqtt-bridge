@@ -1,11 +1,11 @@
-
-#include "endpoints/MQTTClient.hpp"
 #include <iostream>
+#include <string>
 #include <string.h>
 
-#define LOGURU_WITH_STREAMS 1
-#include <loguru.hpp>
+#include "endpoints/MQTTClient.hpp"
 
+#define LOGURU_WITH_STREAMS 1
+#include "loguru.hpp"
 
 MQTTClient::MQTTClient(
                 const char* id,
@@ -63,11 +63,21 @@ MQTTClient::~MQTTClient()
 
 void MQTTClient::on_connect(int rc)
 {
+    #define NAMELEN 15
+
     if (rc == 0)
     {
         DLOG_S(INFO) << "Connected to MQTT broker";  
         
         connected = true;
+
+        string topic = string(this->defaultTopic);
+        string threadName = "..." + topic.substr(topic.size() - NAMELEN + 3);
+        
+        loguru::set_thread_name(threadName.c_str());
+        int rc = pthread_setname_np(pthread_self(), threadName.c_str());
+        LOG_S(INFO) << "pthread_setname_np returned " << rc;
+
     }
     else
     {
