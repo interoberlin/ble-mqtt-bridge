@@ -9,6 +9,7 @@
 *.so
 *.so.0*
 *.elf
+core
 
 # Eclipse
 .project
@@ -28,4 +29,5 @@ bin
 .metadata
 .settings
 .metadata
+
 
