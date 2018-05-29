@@ -46,6 +46,9 @@ class MQTTClient:
     bool sendMessage(string msg, string topic = "");
     bool sendMessage(float*);
 
+    // set the Name of the thread
+    void setThreadName(std::string name = "mqtt: NN");
+    
     void event(event_t*);
 };
 

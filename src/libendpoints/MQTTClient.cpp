@@ -70,14 +70,6 @@ void MQTTClient::on_connect(int rc)
         DLOG_S(INFO) << "Connected to MQTT broker";  
         
         connected = true;
-
-        string topic = string(this->defaultTopic);
-        string threadName = "..." + topic.substr(topic.size() - NAMELEN + 3);
-        
-        loguru::set_thread_name(threadName.c_str());
-        int rc = pthread_setname_np(pthread_self(), threadName.c_str());
-        LOG_S(INFO) << "pthread_setname_np returned " << rc;
-
     }
     else
     {
@@ -182,3 +174,20 @@ void MQTTClient::event(event_t* e)
     }
 }
 
+void MQTTClient::setThreadName(std::string name /* = mqtt: NN */)
+{
+    string topic = string(this->defaultTopic);
+    string threadName = ".../";
+    
+    threadName += topic;
+
+    if (threadName.length() >= 16) {
+        threadName = threadName.substr(threadName.length()-15, threadName.length());
+    }
+    
+    loguru::set_thread_name(threadName.c_str());
+    int rc = pthread_setname_np(pthread_self(), threadName.c_str());
+    if (rc) {
+        LOG_S(ERROR) << "pthread_setname_np returned " << rc << "on topic:" << this->defaultTopic;
+    }
+}
