@@ -76,15 +76,15 @@ static void* bleclient_connection_thread(void* argv)
                 
                     ble_client->manager->start_discovery();
                 
-                // TODO Wie kann man eine tinyb::BluetoothException richtig ansprechen?
+                // TODO: Use tinyb::BluetoothException
                 } catch ( ... ) {
-                    int delay = ble_client->getDiscoveryDelay();
+                    chrono::seconds delay = ble_client->getDiscoveryDelay();
                     delay = delay * 2;
-                    if (delay > 512) {
-                        delay = 512;
+                    if (delay > 512s) {
+                        delay = 512s;
                     }
                     ble_client->setDiscoveryDelay(delay);
-                    LOG_S(WARNING) << "tmout: BLE scan (" << ble_client->getDiscoveryDelay() << "s) " << ble_client->device_address;
+                    LOG_S(WARNING) << "tmout: BLE scan (" << ble_client->getDiscoveryDelay().count() << "s) " << ble_client->device_address;
                     this_thread::sleep_for(std::chrono::seconds(ble_client->getDiscoveryDelay()));
                     continue;
                 }
@@ -116,14 +116,17 @@ static void* bleclient_connection_thread(void* argv)
                     ble_client->manager->stop_discovery();
                     ble_client->device->disconnect();
                     ble_client->device->connect();
+                // TODO: Use tinyb::BluetoothException
                 } catch ( ... ) {
-                    int delay = ble_client->getConnectionDelay();
+                    chrono::seconds delay = ble_client->getConnectionDelay();
                     delay = delay * 2;
-                    if (delay > 512) {
-                        delay = 512;
+                    if (delay > 1024s) {
+                        delay = 1024s;
                     }
                     ble_client->setConnectionDelay(delay);
-                    LOG_S(WARNING) << "tmout: BLE conn (" << ble_client->getConnectionDelay() << "s) " << ble_client->device_address;
+                    LOG_S(WARNING) << "tmout: BLE conn (" << 
+                        ble_client->getConnectionDelay().count() << "s) " << 
+                        ble_client->device_address;
                     this_thread::sleep_for(std::chrono::seconds(ble_client->getConnectionDelay()));
                     continue; 
                 }
@@ -238,6 +241,7 @@ void BLEClient::write(vector<uint8_t>& value)
     {
         characteristic->write_value(value);
     }
+    // TODO: Use tinyb::BluetoothException an handle it properly
     catch (...)
     {
     }
@@ -267,7 +271,18 @@ static void* bleclient_reader_thread(void* argv)
         {
             LOG_S(9) << "Reading data from BLE beacon " << ble_client->device_address;
 
-            vector<uint8_t> data = ble_client->characteristic->read_value(0);
+            vector<uint8_t> data;
+            try {
+                 data = ble_client->characteristic->read_value(0);
+            } catch ( exception e ) {
+                // TODO: Use tinyb Exceptions.
+                // TODO: If we unplug the beacon, we land here.
+                //       increase the read delay on each round. 
+                //       If after several rounds the beacon is still not answering 
+                //       stop the thread and hand it back to the scan/conncetion process.
+                LOG_S(WARNING) << "failed to read, probably lost connection.";
+                this_thread::sleep_for(10s);
+            }
 
             // If no one is listening, simply discard the data
             if (!ble_client->hasEventReceiver())
