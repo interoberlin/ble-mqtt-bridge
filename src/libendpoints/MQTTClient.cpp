@@ -63,11 +63,9 @@ MQTTClient::~MQTTClient()
 
 void MQTTClient::on_connect(int rc)
 {
-    #define NAMELEN 15
-
     if (rc == 0)
     {
-        DLOG_S(INFO) << "Connected to MQTT broker";  
+        DLOG_S(7) << "Connected to MQTT broker";  
         
         connected = true;
     }
@@ -82,7 +80,7 @@ void MQTTClient::on_connect(int rc)
 void MQTTClient::on_disconnect(int rc)
 {
     
-    LOG_S(INFO) << ">> MQTT broker disconnected (" << rc << ")";
+    LOG_S(7) << ">> MQTT broker disconnected (" << rc << ")";
     
     connected = false;
 }
