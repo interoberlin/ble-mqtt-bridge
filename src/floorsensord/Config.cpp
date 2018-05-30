@@ -48,6 +48,7 @@ bool Config::importJSON(ifstream& stream)
         jconfig = config;
         success = true;
     }
+    // TODO: Use json Exceptions.
     catch (exception& e)
     {
         LOG_S(INFO) << "Look at my custom object: " << e.what();
@@ -91,6 +92,7 @@ void Config::generateBeacons(vector<BLEClient*>& beaconList)
             UUID_SERVICE,
             UUID_CHARACTERISTIC3);     
 
+        b->setReadInterval(500ms);
         beaconList.push_back(b);
     }
 }
