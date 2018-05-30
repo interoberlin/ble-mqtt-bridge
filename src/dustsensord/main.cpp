@@ -86,6 +86,7 @@ int main( int argc, char* argv[] )
                             mqtt_broker_host,
                             mqtt_broker_port
                             );
+    mqtt10->setThreadName(topic_pm10);
 
     char topic_pm25[42];
     snprintf(topic_pm25, sizeof(topic_pm25), "dustsensor/%x/pm2.5", id);
@@ -97,6 +98,7 @@ int main( int argc, char* argv[] )
                             mqtt_broker_host,
                             mqtt_broker_port
                             );
+    mqtt25->setThreadName(topic_pm25);
 
     float p25, p10;
 	while (true)
@@ -106,9 +108,9 @@ int main( int argc, char* argv[] )
             LOG_S(INFO) << "Sensor " << id << ": PM2.5=" << p25 << " PM10=" << p10;
 
             mqtt10->sendMessage(&p10);
-            this_thread::sleep_for(0.5s);
+            // this_thread::sleep_for(0.5s);
             mqtt25->sendMessage(&p25);
-            this_thread::sleep_for(0.5s);
+            this_thread::sleep_for(1s);
 		}
 		else
 		{
