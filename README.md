@@ -99,7 +99,7 @@ log_dest file /var/log/mosquitto/mosquitto.log
 * Daemon to read values from the [floor-sensors](src/floorsensord/README.md) used in the sentient-project from Baumhaus Berlin
 
 ### from MQTT to BLE/GATT
-* Daemon to control a legacy [alarm-lamp](src/alarmlampd/README.md)
+* Daemon to control a legacy [alarm-light](src/alarmlightd/README.md)
 * Daemon to steer an driving [robot](src/robbyd/README.md)
 
 ### from USB to MQTT
