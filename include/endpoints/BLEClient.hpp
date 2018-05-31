@@ -72,18 +72,18 @@ private:
     bool terminate_reader_thread;
 
 private:
-    chrono::seconds discoveryDelay = 1s;
+    chrono::seconds discovery_delay = 1s;
 
 public:
-    chrono::seconds getDiscoveryDelay() {return discoveryDelay; };
-    void setDiscoveryDelay(chrono::seconds delay) { discoveryDelay = delay; }
+    chrono::seconds getDiscoveryDelay() {return discovery_delay; };
+    void setDiscoveryDelay(chrono::seconds delay) { discovery_delay = delay; }
 
 private:
-    chrono::seconds connectionDelay = 1s;
+    chrono::seconds connection_delay = 1s;
 
 public:
-    chrono::seconds getConnectionDelay() {return connectionDelay; };
-    void setConnectionDelay(chrono::seconds delay) { connectionDelay = delay; }
+    chrono::seconds getConnectionDelay() {return connection_delay; };
+    void setConnectionDelay(chrono::seconds delay) { connection_delay = delay; }
 
 public:
     BLEClient(
