@@ -31,6 +31,8 @@ MQTTClient::MQTTClient(
     // Start non-blocking connection attempt to broker
     connect_async(host, port, keepalive);
 
+    LOG_S(INFO) << "mqtt: starting loop";
+    
     // Start thread managing connection / publish / subscribe
     loop_start();
 }
