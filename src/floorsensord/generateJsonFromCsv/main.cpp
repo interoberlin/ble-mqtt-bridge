@@ -16,11 +16,11 @@ using namespace std;
 class CSVReader
 {
 	string fileName;
-	string delimeter;
+	string delimiter;
  
 public:
 	CSVReader(string filename, string delm = ",") :
-			fileName(filename), delimeter(delm)
+			fileName(filename), delimiter(delm)
 	{ }
  
 	// Function to fetch data from a CSV File
@@ -39,7 +39,7 @@ vector<vector<string> > CSVReader::getData()
 	vector<vector<string> > dataList;
  
 	string line = "";
-	// Iterate through each line and split the content using delimeter
+	// Iterate through each line and split the content using delimiter
 	while (getline(file, line))
 	{
         if (firstLine) {
@@ -47,7 +47,7 @@ vector<vector<string> > CSVReader::getData()
             continue;
         }
 	    vector<string> vec;
-		boost::algorithm::split(vec, line, boost::is_any_of(delimeter));
+		boost::algorithm::split(vec, line, boost::is_any_of(delimiter));
 		dataList.push_back(vec);
 	}
 	// Close the File
@@ -72,7 +72,12 @@ namespace jConfig {
     };
 
     void to_json(json& j, const sensor_t& s) {
-        j = json{{"nr", s.nr}, {"index", s.index}, {"typ", s.typ}, {"checkerboardId", s.checkerboardId},{"service", s.service}, {"characteristic", s.characteristic}};
+        j = json{{"nr", s.nr}, 
+                 {"index", s.index}, 
+                 {"typ", s.typ}, 
+                 {"checkerboardId", s.checkerboardId},
+                 {"service", s.service}, 
+                 {"characteristic", s.characteristic}};
     }
 
     void from_json(const json& j, sensor_t& s) {
@@ -95,7 +100,11 @@ namespace jConfig {
     };
 
     void to_json(json& j, const beacon_t& b) {
-        j = json{{"address", b.address}, {"owner", b.owner}, {"cable", b.cable}, {"location", b.location}, {"sensor", b.sensors}};
+        j = json{{"address", b.address}, 
+                 {"owner", b.owner}, 
+                 {"cable", b.cable}, 
+                 {"location", b.location}, 
+                 {"sensor", b.sensors}};
     }
 
     void from_json(const json& j, beacon_t& b) {
@@ -176,26 +185,25 @@ int main()
         string sService        = vec[SERVICE];
         string sCharacteristic = vec[CHARCTERISTIC];
 
-        // cerr << "sensor " << sNr << " ";
-
         if (bAddress.length() == 0){
-            // cerr << "no beacon address found." << endl;
+
             if (beacon.sensors.size()) {
                 beacons.beacons.push_back(beacon);
                 beacon.sensors.clear();
             }
+
             continue;
         }
 
         if (lastBeacon.length() == 0) {
-            // cerr << "lastBeacon is empty" << endl;
+
             lastBeacon = bAddress;
             
             DEFINE_BEACON;
         } 
 
         if (lastBeacon != bAddress) {
-            // cerr << endl << "switch of beacon " << lastBeacon << "/" << b <<  endl;
+
             lastBeacon = bAddress;
             beacons.beacons.push_back(beacon);
             beacon.sensors.clear();
@@ -205,12 +213,11 @@ int main()
 
         DEFINE_SENSOR;
 
-        // cerr << b << " s: " << sensor.checkerboardId << endl;
         beacon.sensors.push_back(sensor);
 
     } // for
 
     j = beacons;
 
-    cerr << setw(2) << j << endl;
+    out << setw(2) << j << endl;
 }
