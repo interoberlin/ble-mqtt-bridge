@@ -25,6 +25,18 @@
         {
           "checkerboardId": "M2",
           "index": 1
+        },
+        {
+          "checkerboardId": "M3",
+          "index": 2
+        },
+        {
+          "checkerboardId": "M4",
+          "index": 3
+        },
+        {
+          "checkerboardId": "M5",
+          "index": 4
         }
       ]
     },
