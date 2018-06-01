@@ -136,6 +136,18 @@ enum csvIndices {
 
 int main()
 {
+#define DEFINE_BEACON beacon.address  = bAddress; \
+            beacon.owner    = bOwner; \
+            beacon.cable    = bCable; \
+            beacon.location = bLocation; \
+
+#define DEFINE_SENSOR sensor.nr = sNr; \
+            sensor.index = sIndex; \
+            sensor.typ = sTyp; \
+            sensor.checkerboardId = sCheckerboardId; \
+            sensor.service = sService; \
+            sensor.characteristic = sCharacteristic;
+
 	// Creating an object of CSVWriter
 	CSVReader reader("etc/BaumhausSensorDocumentation.csv");
  
@@ -178,32 +190,20 @@ int main()
         if (lastBeacon.length() == 0) {
             // cerr << "lastBeacon is empty" << endl;
             lastBeacon = bAddress;
-
-            beacon.address  = bAddress;
-            beacon.owner    = bOwner;
-            beacon.cable    = bCable;
-            beacon.location = bLocation;
-    } 
+            
+            DEFINE_BEACON;
+        } 
 
         if (lastBeacon != bAddress) {
             // cerr << endl << "switch of beacon " << lastBeacon << "/" << b <<  endl;
             lastBeacon = bAddress;
             beacons.beacons.push_back(beacon);
             beacon.sensors.clear();
-
-            beacon.address  = bAddress;
-            beacon.owner    = bOwner;
-            beacon.cable    = bCable;
-            beacon.location = bLocation;
-
+            
+            DEFINE_BEACON;
         }    
 
-        sensor.nr             = sNr; // number from floorplan
-        sensor.index          = sIndex;
-        sensor.typ            = sTyp;
-        sensor.checkerboardId = sCheckerboardId;
-        sensor.service        = sService;
-        sensor.characteristic = sCharacteristic;
+        DEFINE_SENSOR;
 
         // cerr << b << " s: " << sensor.checkerboardId << endl;
         beacon.sensors.push_back(sensor);
