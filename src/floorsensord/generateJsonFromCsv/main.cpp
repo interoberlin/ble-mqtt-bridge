@@ -219,5 +219,5 @@ int main()
 
     j = beacons;
 
-    out << setw(2) << j << endl;
+    cout << setw(2) << j << endl;
 }
