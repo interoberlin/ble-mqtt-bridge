@@ -148,7 +148,7 @@ int main()
 #define DEFINE_BEACON beacon.address  = bAddress; \
             beacon.owner    = bOwner; \
             beacon.cable    = bCable; \
-            beacon.location = bLocation; \
+            beacon.location = bLocation;
 
 #define DEFINE_SENSOR sensor.nr = sNr; \
             sensor.index = sIndex; \
