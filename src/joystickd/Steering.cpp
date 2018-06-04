@@ -14,12 +14,12 @@ void Steering::eventButton(js_event_t* e)
     {
         case 4:
             // F1
-            mqtt->sendMessage((const char*) "1", 1, (const char*) "alarmlight/switch");
+            mqtt->sendMessage((char*) "1", 1,  (char*) "alarmlight/switch");
             break;
 
         case 5:
             // F2
-            mqtt->sendMessage((const char*) "0", 1,  (const char*) "alarmlight/switch");
+            mqtt->sendMessage((char*) "0", 1,  (char*) "alarmlight/switch");
             break; 
     }
 }
@@ -89,21 +89,6 @@ void Steering::eventAxis(js_event_t* e)
         }
     }
 
-
-
-    /*
-     * Wait at least 200ms before publishing again
-     */
-//    if (e->time > time_last_publish+200)
-//    {
-//        // Axis number
-//        string subtopic = to_string(e->number);
-//        // Publish the raw value
-//        string message = to_string(e->value);
-//        mqtt->sendMessage(message, subtopic);
-//
-//        time_last_publish = e->time;
-//    }
 }
 
 
