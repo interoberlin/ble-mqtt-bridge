@@ -78,7 +78,7 @@ void parseArgs(int argc, char* argv[])
                 config_filename = optarg;
                 break;
             case '?':
-                 cerr << "usage: " << argv[0] << " [cf<val>d<val>]" << endl; break;
+                 cerr << "usage: " << argv[0] << " [cf<val>v<val>]" << endl; break;
         }
     }
 }
@@ -104,6 +104,8 @@ int main(int argc, char* argv[])
                         "localhost",
                         1883
                         );
+
+        mqtt->setThreadName();
 
         // Create a BLEClient for every configured beacon
         config.generateBeacons(beacons);

@@ -1,11 +1,11 @@
-
-#include "endpoints/MQTTClient.hpp"
 #include <iostream>
+#include <string>
 #include <string.h>
 
-#define LOGURU_WITH_STREAMS 1
-#include <loguru.hpp>
+#include "endpoints/MQTTClient.hpp"
 
+#define LOGURU_WITH_STREAMS 1
+#include "loguru.hpp"
 
 MQTTClient::MQTTClient(
                 const char* id,
@@ -31,6 +31,8 @@ MQTTClient::MQTTClient(
     // Start non-blocking connection attempt to broker
     connect_async(host, port, keepalive);
 
+    LOG_S(INFO) << "mqtt: starting loop";
+    
     // Start thread managing connection / publish / subscribe
     loop_start();
 }
@@ -65,7 +67,7 @@ void MQTTClient::on_connect(int rc)
 {
     if (rc == 0)
     {
-        DLOG_S(INFO) << "Connected to MQTT broker";  
+        DLOG_S(7) << "Connected to MQTT broker";  
         
         connected = true;
     }
@@ -80,7 +82,7 @@ void MQTTClient::on_connect(int rc)
 void MQTTClient::on_disconnect(int rc)
 {
     
-    LOG_S(INFO) << ">> MQTT broker disconnected (" << rc << ")";
+    LOG_S(7) << ">> MQTT broker disconnected (" << rc << ")";
     
     connected = false;
 }
@@ -110,7 +112,7 @@ void MQTTClient::on_message(const struct mosquitto_message* message)
     // Convert message payload to event
     event_t e;
     e.source = EventSource::MQTT;
-    e.mqttMessage = (mqtt_message_t*) message;
+    e.evt.mqttMessage = (mqtt_message_t*) message;
 
     // Generate the event
     getEventReceiver()->event(&e);
@@ -149,19 +151,43 @@ bool MQTTClient::sendMessage(string msg, string subtopic /* = "" */)
     return sendMessage((char*) msg.c_str(), (uint8_t) msg.length(), (char*) topic.c_str());
 }
 
+bool MQTTClient::sendMessage(float* f )
+{
+        char s[30];
+    snprintf(s, 30, "%0.01f", *f);
+    return sendMessage(string(s));
+
+}
 
 void MQTTClient::event(event_t* e)
 {
     switch (e->source)
     {
         case EventSource::BLE:
-            sendMessage(e->bleData, e->bleDataLength, NULL);
+            sendMessage(e->evt.ble_raw.bleData, e->evt.ble_raw.bleDataLength, NULL);
             break;
         case EventSource::SPLITTER:
-            sendMessage(to_string(e->sensorValue), e->checkerboardId);
+            sendMessage(to_string(e->evt.ble_processed.sensorValue), e->evt.ble_processed.checkerboardId);
             break;
         default:
             break;
     }
 }
 
+void MQTTClient::setThreadName(std::string name /* = mqtt: NN */)
+{
+    string topic = string(this->defaultTopic);
+    string threadName = ".../";
+    
+    threadName += topic;
+
+    if (threadName.length() >= 16) {
+        threadName = threadName.substr(threadName.length()-15, threadName.length());
+    }
+    
+    loguru::set_thread_name(threadName.c_str());
+    int rc = pthread_setname_np(pthread_self(), threadName.c_str());
+    if (rc) {
+        LOG_S(ERROR) << "pthread_setname_np returned " << rc << "on topic:" << this->defaultTopic;
+    }
+}

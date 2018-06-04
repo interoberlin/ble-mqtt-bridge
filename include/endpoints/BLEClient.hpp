@@ -66,10 +66,24 @@ private:
     /*
      * Data incoming via BLE is processed in an independent thread
      */
-    chrono::seconds read_interval;
+    chrono::milliseconds read_interval = 500ms;
     pthread_t reader_thread_id;
     bool reader_thread_running;
     bool terminate_reader_thread;
+
+private:
+    chrono::seconds discovery_delay = 1s;
+
+public:
+    chrono::seconds getDiscoveryDelay() {return discovery_delay; };
+    void setDiscoveryDelay(chrono::seconds delay) { discovery_delay = delay; }
+
+private:
+    chrono::seconds connection_delay = 1s;
+
+public:
+    chrono::seconds getConnectionDelay() {return connection_delay; };
+    void setConnectionDelay(chrono::seconds delay) { connection_delay = delay; }
 
 public:
     BLEClient(
@@ -90,8 +104,12 @@ public:
     void stopReaderThread();
     bool getReaderThreadTerminationRequested() { return terminate_reader_thread; }
 
-    void setReadInterval(chrono::seconds seconds) { read_interval = seconds; }
-    chrono::seconds getReadInterval() { return read_interval; }
+    void setReadInterval(chrono::milliseconds milli) { read_interval = milli; }
+    chrono::milliseconds getReadInterval() { return read_interval; }
+
+    // set the Name of the thread
+    void setThreadName(std::string name = "ble: NN");
+
 
     void event(event_t* e);
 };

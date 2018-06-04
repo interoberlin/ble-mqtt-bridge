@@ -8,7 +8,8 @@
 *.hex
 *.so
 *.so.0*
-carbotd
+*.elf
+core
 
 # Eclipse
 .project
@@ -24,3 +25,10 @@ build
 build-rpi
 bin
 
+.pydevproject
+.metadata
+.settings
+.metadata
+
+
+.~lock.BaumhausSensorDocumentation.ods#

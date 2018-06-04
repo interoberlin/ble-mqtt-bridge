@@ -46,8 +46,8 @@ BluetoothEnabledSwitch::BluetoothEnabledSwitch(
 
 void BluetoothEnabledSwitch::event(event_t* e)
 {
-    LOG_S(INFO) << "got event " << string((char*)e->mqttMessage->payload);
-    int val = atoi((char*)e->mqttMessage->payload);
+    LOG_S(INFO) << "got event " << string((char*)e->evt.mqttMessage->payload);
+    int val = atoi((char*)e->evt.mqttMessage->payload);
     vector<unsigned char> v;
     v.push_back(val);
     this->ble->write(v);
