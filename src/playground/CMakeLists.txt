@@ -1,4 +1,5 @@
-project (test)
+project (playground)
+
 add_executable(testFloorSensorJsonMapping testJsonMapping.cpp)
 
 add_executable(testLoguru testLoguru.cpp)
