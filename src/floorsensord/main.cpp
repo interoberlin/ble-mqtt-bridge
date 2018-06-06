@@ -69,7 +69,7 @@ void parseArgs(int argc, char* argv[])
     // let loguru pic an eventually defined -v verbosity level
     loguru::init(argc, argv);
 
-    while ((option_char = getopt (argc, argv, "cd:f:?")) != EOF) {
+    while ((option_char = getopt (argc, argv, "cv:f:?")) != EOF) {
         switch (option_char) {
             case 'c': 
                 config_check_flag = true; 
