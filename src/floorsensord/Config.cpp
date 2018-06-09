@@ -1,5 +1,6 @@
 
 #include <iostream>
+#include <boost/algorithm/string.hpp>
 #include "floorsensord/Config.hpp"
 
 #define LOGURU_WITH_STREAMS 1
@@ -21,11 +22,11 @@ namespace jConfig {
     }
 
     void to_json(json& j, const beacon_t& b) {
-        j = json{{"address", b.address}, {"owner", b.owner}, {"sensor", b.sensors}};
+        j = json{{"address", boost::to_upper_copy(b.address)}, {"owner", b.owner}, {"sensor", b.sensors}};
     }
 
     void from_json(const json& j, beacon_t& b) {
-        b.address = j.at("address").get<std::string>();
+        b.address = boost::to_upper_copy(j.at("address").get<std::string>());
         b.owner   = j.at("owner").get<std::string>();
         b.sensors = j.at("sensors").get<std::vector<jConfig::sensor_t>>();
     }
