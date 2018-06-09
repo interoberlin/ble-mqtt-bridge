@@ -173,7 +173,7 @@ int main()
 
 
     for ( vector<string> vec : dataList ) {
-        string bAddress = vec[ADDRESS];
+        string bAddress = boost::to_upper_copy(vec[ADDRESS]);
         string bOwner   = vec[OWNER];
         string bCable   = vec[CABLE];
         string bLocation= vec[LOCATION];
