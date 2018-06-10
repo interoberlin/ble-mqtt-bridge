@@ -122,7 +122,7 @@ log_dest file /var/log/mosquitto/mosquitto.log
 * Daemon that reads values from an SDS001 [dustsensor](src/dustsensord/README.md) 
 
 ### Configutation generators
-* configuration from [floorsensod]((src/floorsensord/generateJsonFromCsv/README.md))
+* configuration from [floorsensod](src/floorsensord/generateJsonFromCsv/README.md)
 
 ### Playground
 * Playground for [json-mapping](src/playground/README.md)

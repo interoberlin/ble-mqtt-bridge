@@ -1,6 +1,6 @@
 # generateJsonFromCsv
 
-Reads CSV from `etc/BaumhausSensorDocumentation.csv` and write JSON to stdout. Could be used i.e. for 
+This program read the [CSV file](etc/BaumhausSensorDocumentation.csv) saved from the central repository [spreadsheet](etc/BaumhausSensorDocumentation.ods) and dumps the JSON to `stdout`.
 
 ```
 $ bin/generateJsonFromCsv | mosquitto_pub  -t "floorsensor/config" -l
