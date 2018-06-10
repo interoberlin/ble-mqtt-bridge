@@ -17,7 +17,6 @@ namespace jConfig {
 
     void from_json(const json& j, sensor_t& s) {
         s.index          = j.at("index").get<int>();
-        // s.index          = j.at("index").get<std::string>();
         s.checkerboardId = j.at("checkerboardId").get<std::string>();
     }
 
@@ -52,7 +51,7 @@ bool Config::importJSON(ifstream& stream)
     // TODO: Use json Exceptions.
     catch (exception& e)
     {
-        LOG_S(INFO) << "Look at my custom object: " << e.what();
+        LOG_S(INFO) << "Json parsing failed: " << e.what();
     }
     return success;
 }
