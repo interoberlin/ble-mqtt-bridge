@@ -95,6 +95,19 @@ log_dest file /var/log/mosquitto/mosquitto.log
 ```
 ## Programs
 
+### General Configuration Options
+
+```shell
+-v n   Set loguru::g_stderr_verbosity level. Examples:
+    -v 3        Show verbosity level 3 and lower.
+    -v 0        Only show INFO, WARNING, ERROR, FATAL (default).
+    -v INFO     Only show INFO, WARNING, ERROR, FATAL (default).
+    -v WARNING  Only show WARNING, ERROR, FATAL.
+    -v ERROR    Only show ERROR, FATAL.
+    -v FATAL    Only show FATAL.
+    -v OFF      Turn off logging to stderr.
+```
+
 ### from BLE/GATT to MQTT
 * Daemon to read values from the [floor-sensors](src/floorsensord/README.md) used in the sentient-project from Baumhaus Berlin
 
@@ -105,5 +118,12 @@ log_dest file /var/log/mosquitto/mosquitto.log
 ### from USB to MQTT
 * Daemon that reads values from an USB [Joystick](src/joystickd/README.md)
 
-## from serial to MQTT
+### from serial to MQTT
 * Daemon that reads values from an SDS001 [dustsensor](src/dustsensord/README.md) 
+
+### Configutation generators
+* configuration from [floorsensod]((src/floorsensord/generateJsonFromCsv/README.md))
+
+### Playground
+* Playground for [json-mapping](src/playground/README.md)
+* Playground for [logging](src/playground/README.md)
